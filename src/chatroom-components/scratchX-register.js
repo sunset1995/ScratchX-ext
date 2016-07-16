@@ -16,6 +16,8 @@ module.exports = {
         descriptor.blocks = [opCode, label, methodName];
         for(var i=4; i<arguments.length; ++i)
             descriptor.blocks.push(arguments[i]);
+        console.log(ext);
+        console.log(descriptor)
     },
     ext: ext,
     descriptor: descriptor,
