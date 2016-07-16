@@ -1,4 +1,8 @@
 (function(ext) {
+    console.log('hello, scratchX!!');
+    console.log(document.body)
+    $.loadScript('https://cdn.socket.io/socket.io-1.4.5.js')
+
     // Cleanup function when the extension is unloaded
     ext._shutdown = function() {};
 
