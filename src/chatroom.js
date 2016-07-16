@@ -22,8 +22,9 @@
                 return size;
             },
             push: function(text) {
-                ++size;
                 msgQueue[++top] = text;
+                ++size;
+                console.log([top, tail, size])
             },
             pop: function() {
                 if( size==0 )
@@ -32,6 +33,8 @@
                 var ret = msgQueue[tail];
                 delete msgQueue[tail];
                 ++tail;
+                console.log([top, tail, size])
+                console.log(ret)
                 return ret;
             },
         }
@@ -46,8 +49,9 @@
 
 
     // Send message to server
-    function say(text) {
+    function say(text, callback) {
         io.emit('sayToAll', text);
+        callback();
     };
 
     // Whether there is message in queue
