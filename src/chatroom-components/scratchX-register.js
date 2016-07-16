@@ -13,7 +13,7 @@ var descriptor = {
 module.exports = {
     'add': function(func, opCode, label, methodName) {
         ext[methodName] = func;
-        block = [opCode, label, methodName];
+        var block = [opCode, label, methodName];
         for(var i=4; i<arguments.length; ++i)
             block.push(arguments[i]);
         descriptor.blocks.push(block);
@@ -22,4 +22,4 @@ module.exports = {
     },
     ext: ext,
     descriptor: descriptor,
-}
+};
