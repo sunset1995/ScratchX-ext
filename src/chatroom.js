@@ -54,13 +54,13 @@
     };
 
     // Whether there is message in queue
-    function msgQueueSize() {
-        return msgQueue.size();
+    function msgQueueSize(callback) {
+        callback(msgQueue.size());
     }
 
     // Get message from queue
-    function msgQueuePop() {
-        return msgQueue.pop();
+    function msgQueuePop(callback) {
+        callback(msgQueue.pop());
     }
 
 
@@ -80,8 +80,8 @@
     var descriptor = {
         blocks: [
             ['w', 'Say %s', 'say', "Hello, snp2016!"],
-            ['r', 'Message queue size', 'msgQueueSize'],
-            ['r', 'Message queue pop', 'msgQueuePop'],
+            ['R', 'Message queue size', 'msgQueueSize'],
+            ['R', 'Message queue pop', 'msgQueuePop'],
         ]
     };
 
