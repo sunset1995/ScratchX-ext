@@ -18,8 +18,8 @@
         var tail = 0;
         var size = 0;
         return {
-            isEmpty: function() {
-                return top==tail-1;
+            size: function() {
+                return size;
             },
             push: function(text) {
                 ++size;
@@ -38,6 +38,7 @@
     })();
 
     io.on('someOneSay', function(text) {
+        console.log(text);
         msgQueue.push(text);
     });
 
@@ -50,8 +51,8 @@
     };
 
     // Whether there is message in queue
-    function msgQueueIsEmpty() {
-        return msgQueue.isEmpty();
+    function msgQueueSize() {
+        return msgQueue.size();
     }
 
     // Get message from queue
@@ -74,7 +75,7 @@
     var descriptor = {
         blocks: [
             ['w', 'Say %s', 'say', "Hello, snp2016!"],
-            ['r', 'Message queue is empty', 'msgQueueIsEmpty'],
+            ['r', 'Message queue size', 'msgQueueSize'],
             ['r', 'Message queue pop', 'msgQueuePop'],
         ]
     };
