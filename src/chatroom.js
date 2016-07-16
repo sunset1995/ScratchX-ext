@@ -1,7 +1,6 @@
 (function(ext) {
 
 
-
     // Init socket
     var io = require('socket.io-client')('http://snp2016.nctu.me:4444');
     // Export to global
@@ -53,6 +52,11 @@
         callback();
     };
 
+    // Regist name
+    function registName(name) {
+        io.emit('registName', name);
+    }
+
     // Whether there is message in queue
     function msgQueueSize(callback) {
         callback(msgQueue.size());
@@ -67,25 +71,19 @@
 
 
     // Scratch extentions
-    var ext = {
-        _shutdown: function() {},
-        _getStatus: function() {
-            return {status: 2, msg: 'Ready'};
-        },
-        say: say,
-        msgQueueSize: msgQueueSize,
-        msgQueuePop: msgQueuePop,
-    };
+    var SXregister = require('chatroom-components/scratchX-register.js');
+    SXregister.add(say, 'w', 'Say %s', 'say', 'Hello, snp2016!');
+    SXregister.add(registName, 'w', 'Regist my name as %s', 'registName');
+    SXregister.add(msgQueueSize, 'R', 'Message queue size', 'msgQueueSize');
+    SXregister.add(msgQueuePop, 'R', 'Message queue pop', 'msgQueuePop');
 
-    var descriptor = {
-        blocks: [
-            ['w', 'Say %s', 'say', "Hello, snp2016!"],
-            ['R', 'Message queue size', 'msgQueueSize'],
-            ['R', 'Message queue pop', 'msgQueuePop'],
-        ]
-    };
 
-    ScratchExtensions.register('Chatroom extension', descriptor, ext);
+
+
+    ScratchExtensions.register(
+        'Chatroom extension',
+        SXregister.descriptor,
+        SXregister.ext);
 
 
 })({});
