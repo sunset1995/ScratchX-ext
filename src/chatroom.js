@@ -70,6 +70,8 @@
             return {status: 2, msg: 'Ready'};
         },
         say: say,
+        msgQueueSize: msgQueueSize,
+        msgQueuePop: msgQueuePop,
     };
 
     var descriptor = {
