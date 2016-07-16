@@ -45,6 +45,10 @@ gulp.task('default', function(){
 gulp.task('debug', function(){
     return gulp.src('src/*.js')
         .pipe(browserify({
+            'paths': [
+                __dirname + '/src',
+                __dirname + '/node_modules',
+            ],
             debug: true,
         }))
         .on('error', errorLog)
