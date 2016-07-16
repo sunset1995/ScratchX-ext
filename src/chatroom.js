@@ -41,7 +41,6 @@
     })();
 
     io.on('someOneSay', function(text) {
-        console.log(text);
         msgQueue.push(text);
     });
 
@@ -60,7 +59,7 @@
     }
 
     // Get message from queue
-    function msgQueuePop(text) {
+    function msgQueuePop() {
         return msgQueue.pop();
     }
 
