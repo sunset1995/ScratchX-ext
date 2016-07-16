@@ -14,9 +14,9 @@ module.exports = {
     'add': function(func, opCode, label, methodName) {
         ext[methodName] = func;
         descriptor.blocks.push([opCode, label, methodName]);
-        var bk = descriptor.blocks.length - 1;
+        var id = descriptor.blocks.length - 1;
         for(let i=4; i<arguments.length; ++i)
-            bk.push(arguments[i]);
+            descriptor.blocks[id].push(arguments[i]);
     },
     ext: ext,
     descriptor: descriptor,
