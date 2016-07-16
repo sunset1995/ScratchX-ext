@@ -20,7 +20,12 @@ gulp.task('default', function(){
     process.env.NODE_ENV = 'production';
     
     return gulp.src('src/*.js')
-        .pipe(browserify())
+        .pipe(browserify({
+            'paths': [
+                __dirname + '/src',
+                __dirname + '/node_modules',
+            ],
+        }))
         .on('error', errorLog)
         .pipe(babel({
             presets: ['es2015'],
