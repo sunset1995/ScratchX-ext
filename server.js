@@ -74,7 +74,7 @@ io.on('connection', function(socket){
 
 
     socket.on('update', function(pair) {
-        if( !joined || typeof pair !== 'object' )
+        if( !joined || !myData || typeof pair !== 'object' )
             return;
         var key = pair[0] || '';
         var val = pair[1] || '';
@@ -84,7 +84,7 @@ io.on('connection', function(socket){
 
 
     socket.on('broadcast', function(msg) {
-        if( !joined || !msg )
+        if( !joined || !myData || !msg )
             return;
         io.to(myRoom.name).emit('member broadcast', msg);
     });
