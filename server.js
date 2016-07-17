@@ -73,9 +73,11 @@ io.on('connection', function(socket){
     });
 
 
-    socket.on('update', function(key, val) {
-        if( !joined || !key )
+    socket.on('update', function(pair) {
+        if( !joined || typeof pair !== 'object' )
             return;
+        var key = pair[0] || '';
+        var val = pair[1] || '';
         myData[key] = val;
         io.to(myRoom.name).emit('member updated', [sid, key, val]);
     });
