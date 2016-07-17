@@ -1,13 +1,24 @@
-# ScratchX experiment
+# ScratchX extension experiment
 
-Search ScratchX for course snp.
+Search ScratchX extension for course snp in NCTU.
+
 
 ## Before start
-You need [nodejs](https://nodejs.org/en/) and [npm](https://www.npmjs.com/)(nodeJs package manager)  
-Install the package required to build, type `npm install --save` on command line.  
-If needed any other package, type `npm install --save packageYouWantToInstall`.  
-So that you can `var pkgName = require('my-pkg')` to include it.  
+* Make sure [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/)(nodejs package manager)  are installed
+* Update nodejs and npm version. [reference here](https://nodejs.org/en/download/package-manager/)
+* Type `npm install --save` to install dependency package
+* Type `npm install -g gulp` to install gulp to global
+
+
+## Directory & Code
+* All source code are inside `src/*.js`
+* All subdirectory under `src/` or filename start with `__` won't be built.
+* The ScratchX extention are built to `extensions/`
+
+Souce code are built with preprocessor: 
+* [browserify](http://browserify.org/) 
+* [babel](https://babeljs.io/) with [ES2015](https://github.com/lukehoban/es6features#readme)
+
 
 ## Build
-Extension source files are in `src/`  
-Type `gulp` or `gulp debug` to build. The final ScratchX extention will in `extensions/`
+Under the project top directory, type `gulp` or `gulp debug`.
