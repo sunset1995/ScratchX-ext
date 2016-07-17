@@ -135,7 +135,7 @@
     var SXregister = require('chatroom-components/scratchX-register.js');
     SXregister.add(update, 'w', 'update %s %s', 'update', 'feature', 'val');
     SXregister.add(broadcast, 'w', 'broadcast %s', 'broadcast', 'signal');
-    SXregister.add(isExist, 'r', 'is %s exit', 'isExist', 'id');
+    SXregister.add(isExist, 'r', 'is %s exist', 'isExist', 'id');
     SXregister.add(get, 'r', 'get %s %s', 'get', 'id', 'feature');
     SXregister.add(roomSize, 'r', 'room size', 'roomSize');
     SXregister.add(getId, 'r', 'get %d th\'s id', 'getId', 0);
