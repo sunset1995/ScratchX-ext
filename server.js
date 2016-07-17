@@ -13,7 +13,9 @@ app.get('*', function(req, res){
 });
 
 
-var allRoomDatas = {
+
+
+var storage = {
     'room name': {
         'each member sid': {
             'key': 'val',
@@ -21,63 +23,66 @@ var allRoomDatas = {
     },
 };
 
-
 // Processing socket for ScrathX
 io.on('connection', function(socket){
   
 
     var sid = socket.id;
+
+    // Policy: member should join room first
+    var joined = false;
     var myRoom = {
         'name': null,
         'datas': {}
     };
-    // Policy: member should joinRoom first
     var myData = null;
-    
-    console.log('Connecteion: ' + sid);
-    sio.emit('memberJoin', sid);
 
 
     socket.on('disconnect', function() {
-        if( myRoom.datas[sid] )
-            delete myRoom.datas[sid];
-        console.log('Disconnect : ' + sid);
-        sio.emit('memberExit', sid);
+        if( !joined )
+            return;
+
+        delete myRoom.datas[sid];
+        socket.leave(myRoom.name);
+        io.to(myRoom.name).emit('member exit', sid);
+
+        console.log(sid + ' exit ' + myRoom.name);
     });
 
 
-    socket.on('joinRoom', function(roomName) {
-        if( typeof roomname !== 'string' )
+    socket.on('join room', function(roomName) {
+        if( joined || typeof roomName !== 'string' )
             return;
-        if( !allRoomDatas[roomName] )
-            allRoomDatas[roomName] = {};
+        joined = true;
+
+        // If first member in room, init memory
+        if( !storage[roomName] )
+            storage[roomName] = {};
 
         myRoom.name = roomName;
-        myRoom.datas = allRoomDatas[roomName];
-        console.log('Join ' + roomName + ' : ' + sid);
+        myRoom.datas = storage[roomName];
+        myRoom.datas[sid] = {};
+        myData = myRoom.datas[sid];
+        
         socket.join(roomName);
+        io.to(myRoom.name).emit('member join', sid);
+
+        console.log(sid + ' join ' + roomName);
     });
 
 
     socket.on('update', function(key, val) {
-        if( !myData || !key )
+        if( !joined || !key )
             return;
-        myRoom.datas[sid][key] = val;
-    });
-
-
-    socket.on('updateThenBroadcast', function(key, val) {
-        if( !myData || !key )
-            return;
-        myRoom[sid][key] = val;
-        sio.emit('someoneUpdate', sid);
+        myData[key] = val;
+        io.to(myRoom.name).emit('member updated', [sid, key, val]);
     });
 
 
     socket.on('broadcast', function(msg) {
-        if( !myData || !msg )
+        if( !joined || !msg )
             return;
-        sio.emit('broadcast', msg);
+        io.to(myRoom.name).emit('member broadcast', msg);
     });
 
 
