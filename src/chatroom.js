@@ -59,9 +59,9 @@
         callback();
     }
 
-    function broadcast(msg, callback) {
-        if( msg )
-            io.emit('broadcast', msg);
+    function broadcast(signal, callback) {
+        if( signal )
+            io.emit('broadcast', signal);
         callback();
     }
 
@@ -84,6 +84,7 @@
     }
 
     function getId(ith) {
+        // Same ith id will change after member change
         return Object.keys(minnasan)[ith] || '';
     }
     
@@ -92,10 +93,12 @@
 
     // Scratch extentions
     var SXregister = require('chatroom-components/scratchX-register.js');
-    SXregister.add(say, 'w', 'Say %s', 'say', 'Hello, snp2016!');
-    SXregister.add(registName, 'w', 'Regist my name as %s', 'registName');
-    SXregister.add(msgQueueSize, 'R', 'Message queue size', 'msgQueueSize');
-    SXregister.add(msgQueuePop, 'R', 'Message queue pop', 'msgQueuePop');
+    SXregister.add(update, 'w', 'update %s %s', 'update', 'feature', 'val');
+    SXregister.add(broadcast, 'w', 'broadcast %s', 'broadcast', 'signal');
+    SXregister.add(isExist, 'r', 'is %s exit', 'isExist', 'id');
+    SXregister.add(get, 'r', 'get %s %s', 'get', 'id', 'feature');
+    SXregister.add(roomSize, 'r', 'room size', 'roomSize');
+    SXregister.add(getId, 'r', 'get %d th\'s id', 'getId', 0);
 
 
 
