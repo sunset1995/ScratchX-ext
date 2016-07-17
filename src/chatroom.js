@@ -15,6 +15,42 @@
     // instead, read locally.
     var minnasan = {};
 
+    // Maintain ith user
+    // For scratch to iterate through all sid only
+    // Index of sid won't change in one session
+    // Index order is not guarenteed in different application
+    var sidSet = (function() {
+        var maxId = 0;
+        var allSid = {};
+        var back = {};
+
+        function insert(sid) {
+            allSid[maxId] = sid;
+            back[sid] = maxId;
+            ++maxId;
+        }
+
+        function remove(sid) {
+            delete allSid[back[sid]];
+            delete back[sid];
+        }
+
+        function find(ith) {
+            return allSid[ith] || 'EXITED';
+        }
+
+        function maxId() {
+            return maxId;
+        }
+
+        return {
+            insert: insert,
+            remove: remove,
+            find: find,
+            maxId: maxId,
+        };
+    })();
+
 
 
 
@@ -22,14 +58,19 @@
     io.on('join room success', function(roomData) {
         console.log(roomData);
         minnasan = roomData;
+        var keys = Object.keys(minnasan);
+        for(var i=0; i<keys.length; ++i)
+            sidSet.insert(keys[i]);
         io.off('join room success');
     });
     io.on('member exit', function(sid) {
         console.log(sid);
+        sidSet.remove(sid);
         delete minnasan[sid];
     });
     io.on('member join', function(sid) {
         console.log(sid);
+        sidSet.insert(sid);
         minnasan[sid] = {};
     });
     io.on('member updated', function(op) {
@@ -80,12 +121,11 @@
     }
 
     function roomSize() {
-        return Object.keys(minnasan).length;
+        return sidSet.size();
     }
 
     function getId(ith) {
-        // Same ith id will change after member change
-        return Object.keys(minnasan)[ith] || '';
+        return sidSet.find(ith);
     }
     
 
