@@ -31,7 +31,6 @@
 
     <div class="mid-center">
         <h1 id="bg-info">Connecting to server...</h1>
-        <div id="g-sensor"></div>
     </div>
 
     
@@ -44,23 +43,17 @@
         })();
     </script>
     <script>
-        var deviceName = null;
         var registered = false;
-        while( !deviceName )
-            deviceName = prompt("Enter your device name", "NCTU mobile");
 
         var socket = io('http://snp2016.nctu.me:4444');
         var bginfo = document.getElementById('bg-info');
-        var gsensor = document.getElementById('g-sensor');
 
         
         // Init
         socket.on('join room success', function() {
             socket.emit('update', ['type', 'g-sensor']);
-            socket.emit('update', ['name', deviceName]);
             socket.emit('update', ['vx', 0]);
             socket.emit('update', ['vy', 0]);
-            bginfo.innerHTML = 'g-sensor name : ' + deviceName;
             registered = true;
         });
         socket.emit('join room', 'g-sensor');
