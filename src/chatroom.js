@@ -3,70 +3,90 @@
 
     // Init socket
     var io = require('socket.io-client')('http://snp2016.nctu.me:4444');
-    // Export to global
+    
+    // Export to global for debug
     window.io = io;
 
 
 
 
-    // Message queue closure
-    var msgQueue = (function() {
-        // no queue in native js, use hash instead
-        var msgQueue = {};
-        var top = -1;
-        var tail = 0;
-        var size = 0;
-        return {
-            size: function() {
-                return size;
-            },
-            push: function(text) {
-                msgQueue[++top] = text;
-                ++size;
-                console.log([top, tail, size])
-            },
-            pop: function() {
-                if( size==0 )
-                    return -1;
-                --size;
-                var ret = msgQueue[tail];
-                delete msgQueue[tail];
-                ++tail;
-                console.log([top, tail, size])
-                console.log(ret)
-                return ret;
-            },
-        }
-    })();
+    // Room datas
+    // ScratchX don't directly read remote data,
+    // instead, read locally.
+    var minnasan = {};
 
-    io.on('someOneSay', function(text) {
-        msgQueue.push(text);
+
+
+
+    // Binding socket
+    io.on('join room success', function(roomData) {
+        console.log(roomData);
+        minnasan = roomData;
+        io.off('join room success');
+    });
+    io.on('member exit', function(sid) {
+        console.log(sid);
+        delete minnasan[sid];
+    });
+    io.on('member join', function(sid) {
+        console.log(sid);
+        minnasan[sid] = {};
+    });
+    io.on('member updated', function(op) {
+        console.log(op);
+        var sid = op[0];
+        var key = op[1];
+        var val = op[2];
+        if( !minnasan[sid] )
+            return;
+        minnasan[sid][key] = val;
+    });
+    io.on('member broadcast', function(msg) {
+        console.log(msg);
+        // TODO
     });
 
+    // Start using sync room data
+    io.emit('join room', 'chatroom-example');
 
 
 
-    // Send message to server
-    function say(text, callback) {
-        io.emit('sayToAll', text);
+
+    // Implement scratchX extenion
+    function update(key, val, callback) {
+        if( key )
+            io.emit('update', [key, val]);
         callback();
-    };
-
-    // Regist name
-    function registName(name) {
-        io.emit('registName', name);
     }
 
-    // Whether there is message in queue
-    function msgQueueSize(callback) {
-        callback(msgQueue.size());
+    function broadcast(msg, callback) {
+        if( msg )
+            io.emit('broadcast', msg);
+        callback();
     }
 
-    // Get message from queue
-    function msgQueuePop(callback) {
-        callback(msgQueue.pop());
+    function isExist(sid) {
+        if( minnasan[sid] )
+            return 1;
+        else
+            return 0;
     }
 
+    function get(sid, key) {
+        if( minnasan[sid] )
+            return minnasan[sid][key] || '';
+        else
+            return '';
+    }
+
+    function roomSize() {
+        return Object.keys(minnasan).length;
+    }
+
+    function getId(ith) {
+        return Object.keys(minnasan)[ith] || '';
+    }
+    
 
 
 
