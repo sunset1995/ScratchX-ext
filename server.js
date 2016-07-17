@@ -65,7 +65,9 @@ io.on('connection', function(socket){
         myData = myRoom.datas[sid];
         
         socket.join(roomName);
-        io.to(myRoom.name).emit('member join', sid);
+        // Tell others I join
+        socket.broadcast.to(roomName).emit('member join', sid);
+        socket.emit('join room success', myRoom.datas);
 
         console.log(sid + ' join ' + roomName);
     });
