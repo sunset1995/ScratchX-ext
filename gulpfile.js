@@ -19,7 +19,7 @@ gulp.task('default', function(){
 
     process.env.NODE_ENV = 'production';
     
-    return gulp.src('src/*.js')
+    return gulp.src(['src/*.js', '!src/__*'])
         .pipe(browserify({
             'paths': [
                 __dirname + '/src',
