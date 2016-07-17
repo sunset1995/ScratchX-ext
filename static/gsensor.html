@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Gravity sensor</title>
+	<script type="text/javascript">
+		window.fps = 30;
+	</script>
+</head>
+<body>
+
+	<div class="top-center">
+		<button id="registrate">Registrate</button>
+		<button id="detach">Detach</button>
+	</div>
+
+	<div class="mid-center">
+		<h1 id="bg-info"></h1>
+		<div id="g-sensor"></div>
+	</div>
+
+	<style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+			font-family: sans-serif;
+		}
+		html,body {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			background-color: #333;
+			color: white;
+		}
+		.top-center { 
+			text-align: center;
+		}
+		button {
+			display: inline-block;
+			color: white;
+			border: 0;
+			padding: 2em;
+			border-radius: .3em;
+			margin: 1em;
+			cursor: pointer;
+			opacity: .6;
+			transition: opacity 500ms;
+		}
+		button:hover {
+			opacity: 1;
+		}
+		#registrate {
+			background-color: #347A2A;
+		}
+		#detach {
+			background-color: #EA5455;
+		}
+		.mid-center {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		#bg-info {
+			text-align: center;
+			opacity: .5;
+		}
+		#g-sensor {
+			text-align: center;
+			opacity: .5;	
+		}
+	</style>
+	<script type="text/javascript">
+		(function() {
+		  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+		                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+		  window.requestAnimationFrame = requestAnimationFrame;
+		})();
+	</script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script>
+		var bginfo = $('#bg-info')[0];
+
+		var data = {
+			'profile': {
+				'd_name': 'demo_gSensor',
+				'dm_name': 'Smartphone',
+				'is_sim': false,
+				'df_list': ['Acceleration']
+			}		
+		};
+		var registed = false;
+		function register() {
+			bginfo.innerHTML = 'Processing registragion'
+			$.ajax({
+				type: "POST",
+				url: '/demo_gSensor',
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify(data),
+				success: function(res) {
+					console.log(res)
+					bginfo.innerHTML = 'Registration completed'
+					registed = true
+				},
+				error: function(err, st) {
+					console.log(err)
+					console.log(st)
+					bginfo.innerHTML = 'Registration failed'
+				},
+				dataType: 'text'
+			});
+		}
+		function detach() {
+			$.ajax({
+				type: "DELETE",
+				url: '/demo_gSensor',
+				success: function(res) {
+					console.log(res)
+					registed = false
+					bginfo.innerHTML = 'Detached'
+				},
+				error: function(err) {
+					console.log(err)
+					bginfo.innerHTML = 'Can not Detached'
+				}
+			});
+		}
+		function pullProfile() {
+			$.ajax({
+				type: "GET",
+				url: '/demo_gSensor/profile',
+				success: function(res) {
+					console.log(res)
+				},
+				error: function(err) {
+					console.log(err)
+				}
+			});
+		}
+		function pullData() {
+			$.ajax({
+				type: "GET",
+				url: '/demo_gSensor/Acceleration',
+				success: function(res) {
+					console.log(res)
+				},
+				error: function(err) {
+					console.log(err)
+				}
+			});
+		}
+		function update(dt) {
+			$.ajax({
+				type: "PUT",
+				url: '/demo_gSensor/Acceleration',
+				contentType: "application/json; charset=utf-8",
+				data: JSON.stringify({'data': dt}),
+				success: function(res) {
+					console.log(res)
+				},
+				error: function(err) {
+					console.log(err)
+				}
+			});
+		}
+
+		$('#registrate').click(register);
+		$('#detach').click(detach);
+		register();
+
+
+		// G sensor
+		var gSensor = $('#g-sensor')[0];
+
+		var dt = [0, 0];
+		window.ondevicemotion = function(event) {
+			if( registed ) {
+			    dt[0] = event.accelerationIncludingGravity.x | 0;  
+			    dt[1] = event.accelerationIncludingGravity.y | 0;
+			    bginfo.innerHTML = dt.join(',');
+			}
+		}  
+
+		var senderClousure = function() {
+			var interval = 1000 / fps;
+
+			var barrier = null;
+			var requestID = null;
+			function sender(timestamp) {
+				if( barrier===null ) barrier = timestamp;
+				if( timestamp-barrier > interval ) {
+					if( registed )
+						update([dt[0], dt[1], 0]);
+					barrier = timestamp;
+				}
+				requestID = requestAnimationFrame(sender);
+			}
+			requestID = requestAnimationFrame(sender);
+			return function() { return requestID }
+		}();
+	</script>
+</body>
+</html>

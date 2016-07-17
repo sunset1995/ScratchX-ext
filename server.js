@@ -1,16 +1,15 @@
 console.log('Running server now...');
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 
 
 
-// Forward to course page anyway
-app.get('*', function(req, res){
-    res.redirect('https://github.com/mzshieh/snp2016');
-});
+// Set http static files serveer
+app.use(express.static(__dirname + '/static'));
 
 
 
