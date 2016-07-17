@@ -28,6 +28,7 @@
             allSid[maxId] = sid;
             back[sid] = maxId;
             ++maxId;
+            console.log(maxId);
         }
 
         function remove(sid) {
@@ -40,6 +41,7 @@
         }
 
         function maxId() {
+            console.log(maxId);
             return maxId;
         }
 
@@ -56,32 +58,40 @@
 
     // Binding socket
     io.on('join room success', function(roomData) {
-        console.log(roomData);
         minnasan = roomData;
         var keys = Object.keys(minnasan);
         for(var i=0; i<keys.length; ++i)
             sidSet.insert(keys[i]);
         io.off('join room success');
+
+        console.log('join room success ' + roomData.toString());
     });
+
     io.on('member exit', function(sid) {
-        console.log(sid);
         sidSet.remove(sid);
         delete minnasan[sid];
+
+        console.log('member exit ' + sid);
     });
+
     io.on('member join', function(sid) {
-        console.log(sid);
         sidSet.insert(sid);
         minnasan[sid] = {};
+
+        console.log('member join ' + sid);
     });
+
     io.on('member updated', function(op) {
-        console.log(op);
         var sid = op[0];
         var key = op[1];
         var val = op[2];
         if( !minnasan[sid] )
             return;
         minnasan[sid][key] = val;
+
+        console.log('member updated ' + op.toStrin());
     });
+
     io.on('member broadcast', function(msg) {
         console.log(msg);
         // TODO
