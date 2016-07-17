@@ -28,7 +28,6 @@
             allSid[nowid] = sid;
             back[sid] = nowid;
             ++nowid;
-            console.log('sidSet.insert ' + sid);
         }
 
         function remove(sid) {
@@ -41,7 +40,6 @@
         }
 
         function maxId() {
-            console.log(nowid);
             return nowid;
         }
 
