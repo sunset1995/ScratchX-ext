@@ -120,11 +120,11 @@
             return '';
     }
 
-    function roomSize() {
-        return sidSet.size();
+    function sidMaxId() {
+        return sidSet.maxId();
     }
 
-    function getId(ith) {
+    function sidFind(ith) {
         return sidSet.find(ith);
     }
     
@@ -137,8 +137,8 @@
     SXregister.add(broadcast, 'w', 'broadcast %s', 'broadcast', 'signal');
     SXregister.add(isExist, 'r', 'is %s exist', 'isExist', 'id');
     SXregister.add(get, 'r', 'get %s %s', 'get', 'id', 'feature');
-    SXregister.add(roomSize, 'r', 'room size', 'roomSize');
-    SXregister.add(getId, 'r', 'get %d th\'s id', 'getId', 0);
+    SXregister.add(sidMaxId, 'r', 'member list size', 'sidMaxId');
+    SXregister.add(sidFind, 'r', 'get %d th\'s member id', 'sidFind', 0);
 
 
 
