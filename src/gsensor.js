@@ -3,7 +3,7 @@
 
     // Include dependency
     var api = require('__api.js');
-    var SXregister = require('chatroom-components/scratchX-register.js');
+    var SXregister = require('__scratchX-register.js');
 
     // Init socket
     api.joinRoom('g-sensor');
