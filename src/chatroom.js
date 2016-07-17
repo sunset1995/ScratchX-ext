@@ -64,21 +64,27 @@
             sidSet.insert(keys[i]);
         io.off('join room success');
 
-        console.log('join room success ' + roomData.toString());
+        console.log('=== join room success ===');
+        console.log(roomData);
+        console.log('=========================');
     });
 
     io.on('member exit', function(sid) {
         sidSet.remove(sid);
         delete minnasan[sid];
 
-        console.log('member exit ' + sid);
+        console.log('====== member exit ======');
+        console.log(sid);
+        console.log('=========================');
     });
 
     io.on('member join', function(sid) {
         sidSet.insert(sid);
         minnasan[sid] = {};
 
-        console.log('member join ' + sid);
+        console.log('====== member join ======');
+        console.log(sid);
+        console.log('=========================');
     });
 
     io.on('member updated', function(op) {
@@ -89,7 +95,9 @@
             return;
         minnasan[sid][key] = val;
 
-        console.log('member updated ' + op.toStrin());
+        console.log('==== member updated =====');
+        console.log(op);
+        console.log('=========================');
     });
 
     io.on('member broadcast', function(msg) {
@@ -130,8 +138,8 @@
             return '';
     }
 
-    function sidMaxId() {
-        return sidSet.maxId();
+    function sidMaxId(callback) {
+        callback(sidSet.maxId());
     }
 
     function sidFind(ith) {
@@ -147,7 +155,7 @@
     SXregister.add(broadcast, 'w', 'broadcast %s', 'broadcast', 'signal');
     SXregister.add(isExist, 'r', 'is %s exist', 'isExist', 'id');
     SXregister.add(get, 'r', 'get %s %s', 'get', 'id', 'feature');
-    SXregister.add(sidMaxId, 'r', 'member list size', 'sidMaxId');
+    SXregister.add(sidMaxId, 'R', 'member list size', 'sidMaxId');
     SXregister.add(sidFind, 'r', 'get %d th\'s member id', 'sidFind', 0);
 
 
