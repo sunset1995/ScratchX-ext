@@ -20,15 +20,15 @@
     // Index of sid won't change in one session
     // Index order is not guarenteed in different application
     var sidSet = (function() {
-        var maxId = 0;
+        var nowid = 0;
         var allSid = {};
         var back = {};
 
         function insert(sid) {
-            allSid[maxId] = sid;
-            back[sid] = maxId;
-            ++maxId;
-            console.log(maxId);
+            allSid[nowid] = sid;
+            back[sid] = nowid;
+            ++nowid;
+            console.log('sidSet.insert ' + sid);
         }
 
         function remove(sid) {
@@ -41,8 +41,8 @@
         }
 
         function maxId() {
-            console.log(maxId);
-            return maxId;
+            console.log(nowid);
+            return nowid;
         }
 
         return {
