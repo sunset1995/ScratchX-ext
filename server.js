@@ -31,7 +31,13 @@ var opNum = 0;
 function analysisInfo() {
     console.log('\033[2J');
     console.log(opNum + ' op per sec.');
-    console.log(JSON.stringify(storage, null, '\t'));
+    
+    const roomKey = Object.keys(storage);
+    for(let i=0; i<roomKey.length; ++i) {
+        console.log('room name : ' + roomKey);
+        console.log(JSON.stringify(storage[roomKey], null, '\t'))
+    }
+    
     opNum = 0;
 }
 setInterval(analysisInfo, 1000);
@@ -52,22 +58,18 @@ io.on('connection', function(socket){
 
 
     socket.on('disconnect', function() {
-        
-        ++opNum;
-
         if( !joined )
             return;
 
         delete myRoom.datas[sid];
         socket.leave(myRoom.name);
         io.to(myRoom.name).emit('member exit', sid);
+
+        opNum += Object.keys(storage[myRoom.name]).length;
     });
 
 
     socket.on('join room', function(roomName) {
-
-        ++opNum;
-
         if( joined || typeof roomName !== 'string' )
             return;
         joined = true;
@@ -85,29 +87,29 @@ io.on('connection', function(socket){
         // Tell others I join
         socket.broadcast.to(roomName).emit('member join', sid);
         socket.emit('join room success', myRoom.datas);
+
+        opNum += Object.keys(storage[myRoom.name]).length + 1;
     });
 
 
     socket.on('update', function(pair) {
-
-        ++opNum;
-
         if( !joined || !myData || typeof pair !== 'object' )
             return;
         var key = pair[0] || '';
         var val = pair[1] || '';
         myData[key] = val;
         io.to(myRoom.name).emit('member updated', [sid, key, val]);
+
+        opNum += Object.keys(storage[myRoom.name]).length + 1;
     });
 
 
     socket.on('broadcast', function(msg) {
-
-        ++opNum;
-
         if( !joined || !myData || !msg )
             return;
         io.to(myRoom.name).emit('member broadcast', msg);
+
+        opNum += Object.keys(storage[myRoom.name]).length + 1;
     });
 
 
