@@ -30,8 +30,8 @@ storage structure
 var opNum = 0;
 function analysisInfo() {
     console.log('\033[2J');
-    console.log(opNum + 'operations/sec');
-    console.log(storage);
+    console.log(opNum + ' op per sec.');
+    console.log(JSON.stringify(storage, null, '\t'));
     opNum = 0;
 }
 setInterval(analysisInfo, 1000);
