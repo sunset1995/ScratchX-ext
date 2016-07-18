@@ -31,6 +31,8 @@
 
     <div class="mid-center">
         <h1 id="bg-info">Connecting to server...</h1>
+        <h1 id="vx"></h1>
+        <h1 id="vy"></h1>
     </div>
 
     
@@ -47,6 +49,8 @@
 
         var socket = io('http://snp2016.nctu.me:4444');
         var bginfo = document.getElementById('bg-info');
+        var vxDom = document.getElementById('vx');
+        var vyDom = document.getElementById('vy');
 
         
         // Init
@@ -54,6 +58,7 @@
             socket.emit('update', ['type', 'g-sensor']);
             socket.emit('update', ['vx', 0]);
             socket.emit('update', ['vy', 0]);
+            bginfo.innerHTML = ''
             registered = true;
         });
         socket.emit('join room', 'g-sensor');
@@ -65,6 +70,8 @@
         window.ondevicemotion = function(event) {
             vx = event.accelerationIncludingGravity.x || 0;  
             vy = event.accelerationIncludingGravity.y || 0;
+            vx = int(vx*1000) / 1000;
+            vy = int(vy*1000) / 1000;
         }
 
 
@@ -86,7 +93,8 @@
                     }
                     lastTimestamp = timestamp;
                 }
-                bginfo.innerHTML = vx + ' , ' + vy;
+                vxDom.innerHTML = vx;
+                vyDom.innerHTML = vy;
                 requestID = requestAnimationFrame(sender);
             }
             
