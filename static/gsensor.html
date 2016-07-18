@@ -70,8 +70,8 @@
         window.ondevicemotion = function(event) {
             vx = event.accelerationIncludingGravity.x || 0;  
             vy = event.accelerationIncludingGravity.y || 0;
-            vx = int(vx*1000) / 1000;
-            vy = int(vy*1000) / 1000;
+            vx = Math.floor(vx*1000) / 1000;
+            vy = Math.floor(vy*1000) / 1000;
         }
 
 
