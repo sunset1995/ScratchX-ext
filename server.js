@@ -33,7 +33,7 @@ function analysisInfo() {
     console.log(opNum + ' op per sec.');
     
     const roomKey = Object.keys(storage);
-    for(let i=0; i<roomKey.length; ++i) {
+    for(var i=0; i<roomKey.length; ++i) {
         console.log('room name : ' + roomKey);
         console.log(JSON.stringify(storage[roomKey], null, '\t'))
     }
