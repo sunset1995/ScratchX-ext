@@ -14,13 +14,28 @@ app.use(express.static(__dirname + '/static'));
 
 
 
-var storage = {
+/********************************
+storage structure
+{
     'room name': {
         'each member sid': {
             'key': 'val',
         },
     },
 };
+********************************/
+var storageUpdated = true;
+var storage = {};
+
+// Debugger
+function showInfo() {
+    if( storageUpdated ) {
+        console.log('\033[2J');
+        console.log(storage);
+        storageUpdated = false;
+    }
+}
+setInterval(showInfo, 1000);
 
 // Processing socket for ScrathX
 io.on('connection', function(socket){
@@ -45,7 +60,7 @@ io.on('connection', function(socket){
         socket.leave(myRoom.name);
         io.to(myRoom.name).emit('member exit', sid);
 
-        console.log(sid + ' exit ' + myRoom.name);
+        storageUpdated = true;
     });
 
 
@@ -68,7 +83,7 @@ io.on('connection', function(socket){
         socket.broadcast.to(roomName).emit('member join', sid);
         socket.emit('join room success', myRoom.datas);
 
-        console.log(sid + ' join ' + roomName);
+        storageUpdated = true;
     });
 
 
