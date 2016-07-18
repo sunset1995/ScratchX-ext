@@ -14,6 +14,7 @@ app.use(express.static(__dirname + '/static'));
 
 
 
+var storage = {};
 /********************************
 storage structure
 {
@@ -24,18 +25,16 @@ storage structure
     },
 };
 ********************************/
-var storageUpdated = true;
-var storage = {};
 
 // Debugger
-function showInfo() {
-    if( storageUpdated ) {
-        console.log('\033[2J');
-        console.log(storage);
-        storageUpdated = false;
-    }
+var opNum = 0;
+function analysisInfo() {
+    console.log('\033[2J');
+    console.log(opNum + 'operations/sec');
+    console.log(storage);
+    opNum = 0;
 }
-setInterval(showInfo, 1000);
+setInterval(analysisInfo, 1000);
 
 // Processing socket for ScrathX
 io.on('connection', function(socket){
@@ -53,18 +52,22 @@ io.on('connection', function(socket){
 
 
     socket.on('disconnect', function() {
+        
+        ++opNum;
+
         if( !joined )
             return;
 
         delete myRoom.datas[sid];
         socket.leave(myRoom.name);
         io.to(myRoom.name).emit('member exit', sid);
-
-        storageUpdated = true;
     });
 
 
     socket.on('join room', function(roomName) {
+
+        ++opNum;
+
         if( joined || typeof roomName !== 'string' )
             return;
         joined = true;
@@ -82,12 +85,13 @@ io.on('connection', function(socket){
         // Tell others I join
         socket.broadcast.to(roomName).emit('member join', sid);
         socket.emit('join room success', myRoom.datas);
-
-        storageUpdated = true;
     });
 
 
     socket.on('update', function(pair) {
+
+        ++opNum;
+
         if( !joined || !myData || typeof pair !== 'object' )
             return;
         var key = pair[0] || '';
@@ -98,6 +102,9 @@ io.on('connection', function(socket){
 
 
     socket.on('broadcast', function(msg) {
+
+        ++opNum;
+
         if( !joined || !myData || !msg )
             return;
         io.to(myRoom.name).emit('member broadcast', msg);
