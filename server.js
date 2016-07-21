@@ -81,7 +81,7 @@ function analysisInfo() {
         if( !publisher[nowRoom] )
             continue;
         console.log('publisher : ' + nowRoom);
-        console.log('subscriber : ' + Object.keys(io.nsps['/'].adapter.rooms[nowRoom]));
+        console.log('subscriber : ' + io.nsps['/'].adapter.rooms[nowRoom]);
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
 }
