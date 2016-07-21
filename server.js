@@ -34,8 +34,8 @@ function analysisInfo() {
     
     const roomKey = Object.keys(storage);
     for(var i=0; i<roomKey.length; ++i) {
-        console.log('room name : ' + roomKey);
-        console.log(JSON.stringify(storage[roomKey], null, '\t'))
+        console.log('room name : ' + roomKey[i]);
+        console.log(JSON.stringify(storage[roomKey[i]], null, '\t'))
     }
     
     opNum = 0;
