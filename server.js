@@ -42,7 +42,7 @@ io.on('connection', function(socket){
 
 
     socket.on('update', function(features) {
-        if( typeof ops !== 'object' )
+        if( typeof features !== 'object' )
             return;
 
         var data = publisher[myRoomID];
