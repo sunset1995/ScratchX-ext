@@ -54,10 +54,12 @@
         socket.on('connect', function() {
             bginfo.innerHTML = ''
             connecting = false;
+            socket.emit('set name', ID);
         });
         socket.on('reconnect', function() {
             bginfo.innerHTML = '';
             connecting = false;
+            socket.emit('set name', ID);
         })
         socket.on('disconnect', function() {
             bginfo.innerHTML = 'Disconnect';
@@ -67,7 +69,6 @@
             bginfo.innerHTML = 'Reconnecting to server...';
             connecting = true;
         });
-        socket.emit('set name', ID);
 
 
         // g-sensor
