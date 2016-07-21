@@ -62,8 +62,8 @@ io.on('connection', function(socket){
 
         var rid = name2rid[name] || name;
         socket.join(rid, function(err) {
-            console.log(err);
-            socket.emit('subscribe success', [name, publisher[rid]]);
+            if( !err )
+                socket.emit('subscribe success', [name, publisher[rid]]);
         });
     });
 
@@ -84,7 +84,7 @@ function analysisInfo() {
             continue;
         var members = io.nsps['/'].adapter.rooms[nowRoom] || {};
         console.log('publisher : ' + keys[i]);
-        console.log('subscriber : ' + Object.keys(members).length);
+        console.log('subscriber : ' + members.length || 0);
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
 }
