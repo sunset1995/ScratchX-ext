@@ -25,6 +25,7 @@ io.on('connection', function(socket){
   
 
     var myRoomID = 'room_' + socket.id;
+    var myName = myRoomID;
     publisher[myRoomID] = {};
 
 
@@ -38,6 +39,7 @@ io.on('connection', function(socket){
             return;
 
         name2rid[name] = myRoomID;
+        myName = name;
     });
 
 
@@ -50,7 +52,7 @@ io.on('connection', function(socket){
         for(var i=0; i<keys.length; ++i)
             data[keys[i]] = features[keys[i]];
 
-        io.to(myRoomID).emit('publisher updated', [myRoomID, data]);
+        io.to(myRoomID).emit('publisher updated', [myName, data]);
     });
 
 
@@ -60,7 +62,8 @@ io.on('connection', function(socket){
 
         var rid = name2rid[name] || name;
         socket.join(rid, function(err) {
-            socket.emit('subscribe success', [rid, publisher[rid]]);
+            console.log(err);
+            socket.emit('subscribe success', [name, publisher[rid]]);
         });
     });
 
