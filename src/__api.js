@@ -7,132 +7,67 @@ window.io = io;
 
 
 
-// Room datas
-// ScratchX don't directly read remote data,
-// instead, read locally.
-var minnasan = {};
-
-// Maintain ith user
-// For scratch to iterate through all sid only
-// Index of sid won't change in one session
-// Index order is not guarenteed in different application
-var sidSet = (function() {
-    var nowid = 0;
-    var allSid = {};
-    var back = {};
-
-    function insert(sid) {
-        allSid[nowid] = sid;
-        back[sid] = nowid;
-        ++nowid;
-    }
-
-    function remove(sid) {
-        delete allSid[back[sid]];
-        delete back[sid];
-    }
-
-    function find(ith) {
-        return allSid[ith] || 'EXITED';
-    }
-
-    function maxId() {
-        return nowid;
-    }
-
-    return {
-        insert: insert,
-        remove: remove,
-        find: find,
-        maxId: maxId,
-    };
-})();
-
-
+// Sync only subscribed with server
+var localCache = {};
+var toBeUpdated = {};
 
 
 // Binding socket
-io.on('join room success', function(roomData) {
-    minnasan = roomData;
-    var keys = Object.keys(minnasan);
-    for(var i=0; i<keys.length; ++i)
-        sidSet.insert(keys[i]);
-    io.off('join room success');
-
-    console.log('=== join room success ===');
-    console.log(roomData);
-    console.log('=========================');
+io.on('subscribe success', function(ret) {
+    var who = ret[0];
+    var features = ret[1];
+    localCache[who] = features;
 });
 
-io.on('member exit', function(sid) {
-    sidSet.remove(sid);
-    delete minnasan[sid];
-
-    console.log('====== member exit ======');
-    console.log(sid);
-    console.log('=========================');
+io.on('publisher updated', function(ret) {
+    var who = ret[0];
+    var features = ret[1];
+    localCache[who] = features;
 });
 
-io.on('member join', function(sid) {
-    sidSet.insert(sid);
-    minnasan[sid] = {};
 
-    console.log('====== member join ======');
-    console.log(sid);
-    console.log('=========================');
-});
+// Check whether need to trigger update or not
+var fps = 30;
+var interval = 1000 / fps;
 
-io.on('member updated', function(op) {
-    var sid = op[0];
-    var key = op[1];
-    var val = op[2];
-    if( !minnasan[sid] )
-        return;
-    minnasan[sid][key] = val;
-
-    console.log('==== member updated =====');
-    console.log(op);
-    console.log('=========================');
-});
-
-io.on('member broadcast', function(msg) {
-    console.log(msg);
-    // TODO
-});
-
+var lastTimestamp = null;
+var requestID = null;
+function sender(timestamp) {
+    if( lastTimestamp===null )
+        lastTimestamp = timestamp;
+    if( timestamp-lastTimestamp > interval ) {
+        if( Object.keys(toBeUpdated).length > 0 ) {
+            io.emit('update', toBeUpdated);
+            toBeUpdated = {};
+        }
+        lastTimestamp = timestamp;
+    }
+    requestID = requestAnimationFrame(sender);
+}
+requestID = requestAnimationFrame(sender);
 
 
 
 
 // Export api
 module.exports = {
-    joinRoom: function(roomName) {
-        io.emit('join room', roomName);
+    setName: function(name) {
+        if( typeof name !== 'string' )
+            return;
+        io.emit('set name', name);
     },
     update: function(key, val) {
-        if( key )
-            io.emit('update', [key, val]);
+        if( !key )
+            return;
+        toBeUpdated[key] = val;
     },
-    broadcast: function(signal) {
-        if( signal )
-            io.emit('broadcast', signal);
-    },
-    isExist: function(sid) {
-        if( minnasan[sid] )
-            return 1;
-        else
-            return 0;
-    },
-    get: function(sid, key) {
-        if( minnasan[sid] )
-            return minnasan[sid][key] || '';
-        else
+    get: function(who, feature) {
+        if( localCache[who] )
+            return localCache[who][feature] || '';
+        else {
+            localCache[who] = {};
+            io.emit('subscribe', who);
             return '';
-    },
-    sidListSize: function() {
-        return sidSet.maxId();
-    },
-    sidListFind: function(ith) {
-        return sidSet.find(ith);
+        }
     },
 }
