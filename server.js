@@ -84,7 +84,7 @@ function analysisInfo() {
             continue;
         var members = io.nsps['/'].adapter.rooms[nowRoom] || {};
         console.log('publisher : ' + keys[i]);
-        console.log('subscriber : ' + members.length || 0);
+        console.log('subscriber : ' + (members.length || 0));
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
 }
