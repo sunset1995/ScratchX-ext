@@ -81,7 +81,7 @@ function analysisInfo() {
         var nowRoom = name2rid[keys[i]];
         if( !publisher[nowRoom] )
             continue;
-        console.log('publisher : ' + nowRoom);
+        console.log('publisher : ' + keys[i]);
         console.log('subscriber : ' + io.nsps['/'].adapter.rooms[nowRoom]);
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
