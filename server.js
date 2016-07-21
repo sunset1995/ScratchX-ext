@@ -73,16 +73,15 @@ io.on('connection', function(socket){
 // Debugger
 function analysisInfo() {
     console.log('\u001B[2J\u001B[0;0f');
-    console.log(publisher)
-    console.log(name2rid)
     
     const keys = Object.keys(name2rid);
     for(var i=0; i<keys.length; ++i) {
         var nowRoom = name2rid[keys[i]];
         if( !publisher[nowRoom] )
             continue;
+        var members = io.nsps['/'].adapter.rooms[nowRoom] || {};
         console.log('publisher : ' + keys[i]);
-        console.log('subscriber : ' + io.nsps['/'].adapter.rooms[nowRoom]);
+        console.log('subscriber : ' + Object.keys(members).length);
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
 }
