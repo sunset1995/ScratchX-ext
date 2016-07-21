@@ -78,8 +78,20 @@
         window.ondevicemotion = function(event) {
             info.vx = event.accelerationIncludingGravity.x || 0;  
             info.vy = event.accelerationIncludingGravity.y || 0;
-            info.vx = Math.floor(info.vx*10) / 10;
-            info.vy = Math.floor(info.vy*10) / 10;
+            info.vz = event.accelerationIncludingGravity.z || 0;
+            info.ax = event.acceleration.x || 0;
+            info.ay = event.acceleration.y || 0;
+            info.az = event.acceleration.z || 0;
+            info.alpha = event.rotationRate.alpha || 0;
+            info.beta = event.rotationRate.beta || 0;
+            info.gamma = event.rotationRate.gamma || 0;
+
+            info.vx = Math.floor(info.vx*1000) / 1000;
+            info.vy = Math.floor(info.vy*1000) / 1000;
+            info.vz = Math.floor(info.vz*1000) / 1000;
+            info.ax = Math.floor(info.ax*1000) / 1000;
+            info.ay = Math.floor(info.ay*1000) / 1000;
+            info.az = Math.floor(info.az*1000) / 1000;
         }
 
 
