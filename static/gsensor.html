@@ -43,6 +43,7 @@
         })();
     </script>
     <script>
+        var ID = prompt('Please set your name', 'g-sensor') || 'g-sensor';
         var connecting = true;
 
         var socket = io('http://snp2016.nctu.me:4444');
@@ -66,6 +67,7 @@
             bginfo.innerHTML = 'Reconnecting to server...';
             connecting = true;
         });
+        socket.emit('set name', ID);
 
 
         // g-sensor

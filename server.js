@@ -38,6 +38,7 @@ io.on('connection', function(socket){
             return;
 
         name2rid[name] = myRoomID;
+        console.log(name2rid);
     });
 
 
@@ -80,7 +81,7 @@ function analysisInfo() {
         if( !publisher[nowRoom] )
             continue;
         console.log('publisher : ' + nowRoom);
-        console.log('subscriber num : ' + Object.keys(io.nsps['/'].adapter.rooms[nowRoom]).length);
+        console.log('subscriber : ' + Object.keys(io.nsps['/'].adapter.rooms[nowRoom]));
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
 }
