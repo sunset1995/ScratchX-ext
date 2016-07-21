@@ -14,106 +14,77 @@ app.use(express.static(__dirname + '/static'));
 
 
 
-var storage = {};
-/********************************
-storage structure
-{
-    'room name': {
-        'each member sid': {
-            'key': 'val',
-        },
-    },
-};
-********************************/
+// Mapping roomID -> {feature: val}
+var publisher = {};
 
-// Debugger
-var opNum = 0;
-function analysisInfo() {
-    console.log('\033[2J');
-    console.log(opNum + ' op per sec.');
-    
-    const roomKey = Object.keys(storage);
-    for(var i=0; i<roomKey.length; ++i) {
-        console.log('room name : ' + roomKey[i]);
-        console.log(JSON.stringify(storage[roomKey[i]], null, '\t'))
-    }
-    
-    opNum = 0;
-}
-setInterval(analysisInfo, 1000);
+// Mapping human readable name -> roomID
+var name2rid = {};
 
 // Processing socket for ScrathX
 io.on('connection', function(socket){
   
 
-    var sid = socket.id;
-
-    // Policy: member should join room first
-    var joined = false;
-    var myRoom = {
-        'name': null,
-        'datas': {}
-    };
-    var myData = null;
+    var myRoomID = 'room_' + socket.id;
+    publisher[myRoomID] = {};
 
 
     socket.on('disconnect', function() {
-        if( !joined )
-            return;
-
-        delete myRoom.datas[sid];
-        socket.leave(myRoom.name);
-        io.to(myRoom.name).emit('member exit', sid);
-
-        opNum += Object.keys(storage[myRoom.name]).length;
+        delete publisher[myRoomID];
     });
 
 
-    socket.on('join room', function(roomName) {
-        if( joined || typeof roomName !== 'string' )
+    socket.on('set name', function(name) {
+        if( typeof name !== 'string' )
             return;
-        joined = true;
 
-        // If first member in room, init memory
-        if( !storage[roomName] )
-            storage[roomName] = {};
-
-        myRoom.name = roomName;
-        myRoom.datas = storage[roomName];
-        myRoom.datas[sid] = {};
-        myData = myRoom.datas[sid];
-        
-        socket.join(roomName);
-        // Tell others I join
-        socket.broadcast.to(roomName).emit('member join', sid);
-        socket.emit('join room success', myRoom.datas);
-
-        opNum += Object.keys(storage[myRoom.name]).length + 1;
+        name2rid[name] = myRoomID;
     });
 
 
-    socket.on('update', function(pair) {
-        if( !joined || !myData || typeof pair !== 'object' )
+    socket.on('update', function(features) {
+        if( typeof ops !== 'object' )
             return;
-        var key = pair[0] || '';
-        var val = pair[1] || '';
-        myData[key] = val;
-        io.to(myRoom.name).emit('member updated', [sid, key, val]);
 
-        opNum += Object.keys(storage[myRoom.name]).length + 1;
+        var data = publisher[myRoomID];
+        var keys = Object.keys(features);
+        for(var i=0; i<keys.length; ++i)
+            data[keys[i]] = features[keys[i]];
+
+        io.to(myRoomID).emit('publisher updated', [myRoomID, data]);
     });
 
 
-    socket.on('broadcast', function(msg) {
-        if( !joined || !myData || !msg )
+    socket.on('subscribe', function(name) {
+        if( typeof name !== 'string' )
             return;
-        io.to(myRoom.name).emit('member broadcast', msg);
 
-        opNum += Object.keys(storage[myRoom.name]).length + 1;
+        var rid = name2rid[name] || name;
+        socket.join(rid, function(err) {
+            socket.emit('subscribe success', [rid, publisher[rid]]);
+        });
     });
 
 
 });
+
+
+
+
+// Debugger
+function analysisInfo() {
+    console.log('\u001B[2J\u001B[0;0f');
+    
+    const keys = Object.keys(name2rid);
+    for(var i=0; i<keys.length; ++i) {
+        var nowRoom = name2rid[keys[i]];
+        if( !publisher[nowRoom] )
+            continue;
+        console.log('publisher : ' + nowRoom);
+        console.log('subscriber num : ' + Object.keys(io.nsps['/'].adapter.rooms[nowRoom]).length);
+        console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
+    }
+}
+setInterval(analysisInfo, 1000);
 
 
 
