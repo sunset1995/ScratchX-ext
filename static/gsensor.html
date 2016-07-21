@@ -31,8 +31,6 @@
 
     <div class="mid-center">
         <h1 id="bg-info">Connecting to server...</h1>
-        <h1 id="vx"></h1>
-        <h1 id="vy"></h1>
     </div>
 
     
@@ -45,33 +43,41 @@
         })();
     </script>
     <script>
-        var registered = false;
+        var connecting = true;
 
         var socket = io('http://snp2016.nctu.me:4444');
         var bginfo = document.getElementById('bg-info');
-        var vxDom = document.getElementById('vx');
-        var vyDom = document.getElementById('vy');
 
         
         // Init
-        socket.on('join room success', function() {
-            socket.emit('update', ['type', 'g-sensor']);
-            socket.emit('update', ['vx', 0]);
-            socket.emit('update', ['vy', 0]);
+        socket.on('connect', function() {
             bginfo.innerHTML = ''
-            registered = true;
+            connecting = false;
         });
-        socket.emit('join room', 'g-sensor');
+        socket.on('reconnect', function() {
+            bginfo.innerHTML = '';
+            connecting = false;
+        })
+        socket.on('disconnect', function() {
+            bginfo.innerHTML = 'Disconnect';
+            connecting = true;
+        });
+        socket.on('reconnect_attempt', function() {
+            bginfo.innerHTML = 'Reconnecting to server...';
+            connecting = true;
+        });
 
 
         // g-sensor
-        var vx = 0;
-        var vy = 0;
+        var info = {
+            vx: 0,
+            vy: 0
+        };
         window.ondevicemotion = function(event) {
-            vx = event.accelerationIncludingGravity.x || 0;  
-            vy = event.accelerationIncludingGravity.y || 0;
-            vx = Math.floor(vx*1000) / 1000;
-            vy = Math.floor(vy*1000) / 1000;
+            info.vx = event.accelerationIncludingGravity.x || 0;  
+            info.vy = event.accelerationIncludingGravity.y || 0;
+            info.vx = Math.floor(info.vx*10) / 10;
+            info.vy = Math.floor(info.vy*10) / 10;
         }
 
 
@@ -87,14 +93,12 @@
                 	lastTimestamp = timestamp;
 
                 if( timestamp-lastTimestamp > interval ) {
-                    if( registered ) {
-                    	socket.emit('update', ['vx', vx]);
-                    	socket.emit('update', ['vy', vy]);
+                    if( !connecting ) {
+                    	socket.emit('update', info);
+                        bginfo.innerHTML = JSON.stringify(info, null, '\t')
                     }
                     lastTimestamp = timestamp;
                 }
-                vxDom.innerHTML = vx;
-                vyDom.innerHTML = vy;
                 requestID = requestAnimationFrame(sender);
             }
             
