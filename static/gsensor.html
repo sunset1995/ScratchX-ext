@@ -25,12 +25,76 @@
             transform: translate(-50%, -50%);
             text-align: center;
         }
+        #panel {
+            position: absolute;
+            top: 999;
+            padding: 4em 8em 2em 8em;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #333;
+            background-color: white;
+        }
+        #panel * {
+            display: block;
+        }
+        #panel header {
+            display: block;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 900;
+            margin-bottom: 1em;
+        }
+        #panel div {
+            margin: 0 0 2em 0;
+        }
+        #panel label {
+            text-align: left;
+        }
+        #panel input {
+            display: block;
+            width: 100%;
+            padding: .8em 0;
+            border: 0;
+            margin-top: .3em;
+            border-radius: .15em;
+            background-color: #eeeeee;
+        }
+        #panel button {
+            display: inline-block;
+            border: 0;
+            padding: 1em 2em;
+            margin-top: 1em;
+            color: white;
+            background-color: #7fb959;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
     <div class="mid-center">
-        <h1 id="bg-info">Connecting to server...</h1>
+        <h1 id="bg-info"></h1>
+    </div>
+
+    <div id="panel">
+        <header>Connection setting</header>
+        <div>
+            <label for="url">url</label>
+            <input id="url" type="text" placeholder="example.nctu.edu">
+        </div>
+        <div>
+            <label for="port">port</label>
+            <input id="port" type="text" value="8080">
+        </div>
+        <div>
+            <label for="ID">your device name</label>
+            <input id="ID" type="text" value="makoto phone">
+        </div>
+        <div>
+            <button id="connect">Connect</button>
+        </div>
     </div>
 
     
@@ -43,11 +107,24 @@
         })();
     </script>
     <script>
-        var ID = prompt('Please set your name', 'g-sensor') || 'g-sensor';
+
+    document.getElementById('connect').onclick = fireConnect;
+
+    function fireConnect() {
+
+        document.getElementById('panel').style.display = 'none';
+
+        var url = document.getElementById('url').value;
+        var port = document.getElementById('port').value;
+        var ID = document.getElementById('ID').value;
         var connecting = true;
 
-        var socket = io('http://snp2016.nctu.me:4444');
+        console.log(url + ':' + port);
+        console.log(ID)
+        var socket = io(url + ':' + port);
         var bginfo = document.getElementById('bg-info');
+
+        bginfo.innerHTML = 'Connecting to server...';
 
         
         // Init
@@ -113,6 +190,7 @@
             	return requestID;
             };
         }();
+    }
     </script>
 </body>
 </html>
