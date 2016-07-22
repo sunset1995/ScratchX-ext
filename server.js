@@ -87,12 +87,13 @@ function analysisInfo() {
         if( !publisher[nowRoom] )
             continue;
         var members = io.nsps['/'].adapter.rooms[nowRoom] || {};
+        console.log('============================================');
         console.log('publisher : ' + keys[i]);
         console.log('subscriber : ' + (members.length || 0));
         console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
     }
 }
-setInterval(analysisInfo, 1000);
+setInterval(analysisInfo, 2000);
 
 
 
