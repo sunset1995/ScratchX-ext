@@ -18,23 +18,18 @@ app.use(express.static(__dirname + '/static'));
 
 
 
-// Mapping roomID -> {feature: val}
+// Mapping roomname -> {feature: val}
 var publisher = {};
-
-// Mapping human readable name -> roomID
-var name2rid = {};
 
 // Processing socket for ScrathX
 io.on('connection', function(socket){
   
 
-    var myRoomID = 'room_' + socket.id;
-    var myName = myRoomID;
-    publisher[myRoomID] = {};
+    var ID = socket.id;
 
 
     socket.on('disconnect', function() {
-        delete publisher[myRoomID];
+        delete publisher[ID];
     });
 
 
@@ -42,8 +37,8 @@ io.on('connection', function(socket){
         if( typeof name !== 'string' )
             return;
 
-        name2rid[name] = myRoomID;
-        myName = name;
+        delete publisher[ID];
+        ID = name;
     });
 
 
@@ -51,12 +46,14 @@ io.on('connection', function(socket){
         if( typeof features !== 'object' )
             return;
 
-        var data = publisher[myRoomID];
+        if( !publisher[ID] )
+            publisher[ID] = {};
+        var data = publisher[ID];
         var keys = Object.keys(features);
         for(var i=0; i<keys.length; ++i)
             data[keys[i]] = features[keys[i]];
 
-        io.to(myRoomID).emit('publisher updated', [myName, data]);
+        io.to(ID).emit('publisher updated', [ID, data]);
     });
 
 
@@ -64,10 +61,9 @@ io.on('connection', function(socket){
         if( typeof name !== 'string' )
             return;
 
-        var rid = name2rid[name] || name;
-        socket.join(rid, function(err) {
+        socket.join(name, function(err) {
             if( !err )
-                socket.emit('subscribe success', [name, publisher[rid]]);
+                socket.emit('subscribe success', [name, publisher[name] || {}]);
         });
     });
 
@@ -81,19 +77,16 @@ io.on('connection', function(socket){
 function analysisInfo() {
     console.log('\u001B[2J\u001B[0;0f');
     
-    const keys = Object.keys(name2rid);
+    const keys = Object.keys(publisher);
     for(var i=0; i<keys.length; ++i) {
-        var nowRoom = name2rid[keys[i]];
-        if( !publisher[nowRoom] )
-            continue;
-        var members = io.nsps['/'].adapter.rooms[nowRoom] || {};
+        var members = io.nsps['/'].adapter.rooms[keys[i]] || {};
         console.log('============================================');
         console.log('publisher : ' + keys[i]);
         console.log('subscriber : ' + (members.length || 0));
-        console.log(JSON.stringify(publisher[nowRoom], null, '\t'));
+        console.log(JSON.stringify(publisher[keys[i]], null, '\t'));
     }
 }
-setInterval(analysisInfo, 2000);
+setInterval(analysisInfo, 1000);
 
 
 
