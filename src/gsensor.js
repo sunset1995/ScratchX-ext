@@ -9,6 +9,11 @@
 
 
     // Implement scratchX extenion
+    function initServer(url, port, callback) {
+        api.initServer(url, port);
+        callback();
+    }
+
     function setName(name, callback) {
         api.setName(name);
         callback();
@@ -27,6 +32,7 @@
 
 
     // Scratch extentions
+    SXregister.add(initServer, 'w', 'init server %s %s', 'initServer', 'url', 'port');
     SXregister.add(setName, 'w', 'set my name as %s', 'setName', 'scratchX');
     SXregister.add(update, 'w', 'update %s %s', 'update', 'feature', 'val');
     SXregister.add(get, 'r', 'get %s %s', 'get', 'who', 'feature');
