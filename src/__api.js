@@ -14,10 +14,10 @@ var toBeUpdated = {};
 
 
 // Can be called once and only once
-function initServer(url, port) {
-    if( io || !url || !port )
+function initServer(url) {
+    if( io || !url )
         return;
-    io = socketio('http://' + url + ':' + port);
+    io = socketio(url);
 
     // Binding socket
     io.on('subscribe success', function(ret) {
