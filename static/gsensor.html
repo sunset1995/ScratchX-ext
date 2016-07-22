@@ -22,8 +22,13 @@
             position: absolute;
             top: 50%;
             left: 50%;
+            width: 80%;
+            max-width: 700px;
             transform: translate(-50%, -50%);
-            text-align: center;
+            text-align: left;
+        }
+        .mid-center div {
+            margin-bottom: 1em;
         }
         #panel {
             position: absolute;
@@ -77,7 +82,9 @@
 <body>
 
     <div class="mid-center">
-        <h1 id="bg-info"></h1>
+        <div id="server-url"></div>
+        <div id="device-name"></div>
+        <div id="bg-info"></div>
     </div>
 
     <div id="panel">
@@ -120,8 +127,11 @@
         var ID = document.getElementById('ID').value;
         var connecting = true;
 
+        document.getElementById('server-url').innerHTML = url + ':' + port;
+        document.getElementById('device-name').innerHTML = ID;
+
         console.log(url + ':' + port);
-        console.log(ID)
+        console.log(ID);
         var socket = io(url + ':' + port);
         var bginfo = document.getElementById('bg-info');
 
@@ -179,6 +189,7 @@
                 if( timestamp-lastTimestamp > interval ) {
                     if( !connecting ) {
                     	socket.emit('update', info);
+                        bginfo.innerHTML = url + ':' + port;
                         bginfo.innerHTML = JSON.stringify(info, null, '\t')
                     }
                     lastTimestamp = timestamp;
