@@ -1,3 +1,7 @@
+const PORT = process.env.PORT || 4444;
+const IP = process.env.IP || '0.0.0.0';
+
+
 console.log('Running server now...');
 
 var express = require('express');
@@ -93,6 +97,6 @@ setInterval(analysisInfo, 1000);
 
 
 
-http.listen(4444, function(){
-    console.log('listening on *:4444');
+http.listen(PORT, IP, function(){
+    console.log('listening on ' + IP + ':' + PORT);
 });
