@@ -16,7 +16,7 @@
     var data = {};
 
     const Df_name = 'Json_string';
-    const profile = {
+    var profile = {
         'd_name': 'ScratchX',
         'dm_name': 'ScratchX',
         'is_sim': false,
@@ -37,6 +37,7 @@
             return;
         }
 
+        profile.d_name = mac;
         config.mac = mac;
         var cb = function() {
             config.registered = true;
