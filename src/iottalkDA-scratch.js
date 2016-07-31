@@ -70,7 +70,10 @@
                     !ret['samples'][0][1] )
                 callback(-1);
             else {
+                console.log(ret['samples'][0][1]);
                 var res = JSON.parse(ret['samples'][0][1]);
+                console.log(res);
+                console.log(key)
                 callback(res[key] || -1);
             }
         };
