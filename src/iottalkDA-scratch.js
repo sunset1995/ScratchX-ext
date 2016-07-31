@@ -53,8 +53,7 @@
             return;
         }
 
-        const udp = JSON.stringify(data);
-        api.update(config.url, config.mac, Df_name, [udp], callback);
+        api.update(config.url, config.mac, Df_name, [data], callback);
     }
 
     function get(mac, feature, key, callback) {
@@ -64,8 +63,6 @@
         }
 
         var cb = function(ret) {
-            console.log(typeof ret)
-            console.log(ret)
             if( typeof ret !== 'object' || 
                     !ret['samples'] ||
                     !ret['samples'][0] ||
@@ -75,9 +72,10 @@
             }
             try {
                 var res = ret['samples'][0][1][0];
-                if( feature === Df_name )
-                    res = JSON.parse(res);
-                callback(res[key] || res[parseInt(key, 10)] || -1);
+                if( typeof res === 'object' )
+                    callback(res[key] || res[parseInt(key, 10)] || -1);
+                else
+                    callback(res);
             }
             catch(e) {
                 console.log(e);
