@@ -64,14 +64,12 @@
         }
 
         var cb = function(ret) {
-            if( typeof ret !== 'object' || 
-                    !ret['samples'] ||
-                    !ret['samples'][0] ) {
-                console.log(ret)
-                console.log(ret['samples']);
-                console.log(ret['samples'][0]);
+            console.log(typeof ret);
+            console.log(ret)
+            if( typeof ret !== 'object' )
                 callback(-1);
-            }
+            else if( !ret['samples'] || !ret['samples'][0] )
+                callback(-1);
             else {
                 console.log(ret['samples'][0][1][0]);
                 var res = JSON.parse(ret['samples'][0][1][0]);
