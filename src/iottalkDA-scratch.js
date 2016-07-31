@@ -64,6 +64,7 @@
         }
 
         var cb = function(ret) {
+            console.log(ret)
             if( typeof ret !== 'object' || 
                     !ret['samples'] ||
                     !ret['samples'][0] ||
