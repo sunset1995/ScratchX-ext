@@ -15,11 +15,12 @@
 
     var data = {};
 
+    const Df_name = 'Json_string';
     const profile = {
         'd_name': 'ScratchX',
         'dm_name': 'ScratchX',
         'is_sim': false,
-        'df_list': ['Json_string']
+        'df_list': [Df_name]
     };
 
 
@@ -53,7 +54,7 @@
         }
 
         const udp = JSON.stringify(data);
-        api.update(config.url, config.mac, 'General_input', [udp], callback);
+        api.update(config.url, config.mac, Df_name, [udp], callback);
     }
 
     function get(mac, feature, key, callback) {
