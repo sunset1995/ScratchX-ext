@@ -19,7 +19,7 @@
         'd_name': 'ScratchX',
         'dm_name': 'ScratchX',
         'is_sim': false,
-        'df_list': ['General_input', 'General_output']
+        'df_list': ['Json_string']
     };
 
 
@@ -31,7 +31,7 @@
 
 
     function register(mac, callback) {
-        if( config.mac !== null ) {
+        if( config.url === null || config.mac !== null ) {
             callback();
             return;
         }
@@ -61,7 +61,7 @@
             callback();
             return;
         }
-        
+
         var cb = function(ret) {
             if( typeof ret !== 'object' || 
                     !ret['samples'] ||
@@ -84,7 +84,10 @@
     SXregister.add(register, 'w', 'register mac address as %s', 'register', 'mac');
     SXregister.add(update, 'w', 'update %s %s', 'update', 'key', 'val');
     SXregister.add(get, 'R', 'get %s %s %s', 'get', 'mac', 'feature', 'key');
-
+    SXregister._shutdown = function() {
+        if( config.mac !== null )
+            api.detach(config.url, config.mac);
+    }
 
 
 
