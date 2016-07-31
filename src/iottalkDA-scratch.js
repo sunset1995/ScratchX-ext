@@ -53,7 +53,7 @@
         }
 
         const udp = JSON.stringify(data);
-        api.update(config.url, config.mac, 'General_input', udp, callback);
+        api.update(config.url, config.mac, 'General_input', [udp], callback);
     }
 
     function get(mac, feature, key, callback) {
@@ -63,6 +63,7 @@
         }
 
         var cb = function(ret) {
+            console.log(ret)
             if( typeof ret === 'object' )
                 callback(ret[key] || 0);
             else
