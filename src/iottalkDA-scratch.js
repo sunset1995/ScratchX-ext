@@ -61,13 +61,17 @@
             callback();
             return;
         }
-
+        
         var cb = function(ret) {
-            console.log(ret)
-            if( typeof ret === 'object' )
-                callback(ret[key] || 0);
-            else
-                callback(ret);
+            if( typeof ret !== 'object' || 
+                    !ret['samples'] ||
+                    !ret['samples'][0] ||
+                    !ret['samples'][0][1] )
+                callback(-1);
+            else {
+                var res = JSON.parse(ret['samples'][0][1]);
+                callback(res[key] || -1);
+            }
         };
         api.get(config.url, mac, feature, cb);
     }
