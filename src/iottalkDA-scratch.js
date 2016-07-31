@@ -64,18 +64,25 @@
         }
 
         var cb = function(ret) {
-            console.log(typeof ret);
+            console.log(typeof ret)
             console.log(ret)
-            if( typeof ret !== 'object' )
+            if( typeof ret !== 'object' || 
+                    !ret['samples'] ||
+                    !ret['samples'][0] ||
+                    !ret['samples'][0][1] ) {
                 callback(-1);
-            else if( !ret['samples'] || !ret['samples'][0] )
+                return;
+            }
+            try {
+                var res = ret['samples'][0][1][0];
+                if( feature === Df_name )
+                    res = JSON.parse(res);
+                callback(res[key] || res[parseInt(key, 10)] || -1);
+            }
+            catch(e) {
+                console.log(e);
+                console.log('error occur');
                 callback(-1);
-            else {
-                console.log(ret['samples'][0][1][0]);
-                var res = JSON.parse(ret['samples'][0][1][0]);
-                console.log(res);
-                console.log(key)
-                callback(res[key] || -1);
             }
         };
         api.get(config.url, mac, feature, cb);

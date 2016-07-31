@@ -75,7 +75,7 @@ function get(url, mac, feature, callback) {
         cache: false,
         url: url + '/' + mac + '/' + feature,
         success: function(res) {
-            ret = res;
+            ret = JSON.parse(res);
             console.log(res);
             console.log('Get success');
         },
