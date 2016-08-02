@@ -25,7 +25,7 @@
     var updateSet = {};
     function checkQueue() {
         if( updateQueue.length ) {
-            var id = updateQueue[0][0];
+            var id = updateQueue[0];
             updateQueue.shift(1);
             delete updateSet[id];
             
@@ -94,10 +94,12 @@
     }
 
     function update(key, val) {
+        console.log(cache['ScratchX_output'])
         if( url === '' || !cache )
             return;
 
         cache['ScratchX_output'][key] = val;
+        console.log(cache['ScratchX_output'])
 
         if( !updateSet[id] ) {
             // Push to updateQueue
