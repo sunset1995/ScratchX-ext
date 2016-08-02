@@ -124,7 +124,7 @@
                     // Update local cache
                     console.log(ret)
                     console.log(typeof ret)
-                    cache['ScratchX_output'] = ret;
+                    cache['ScratchX_output'] = ret[0];
 
                     __report(key, callback);
                 });
