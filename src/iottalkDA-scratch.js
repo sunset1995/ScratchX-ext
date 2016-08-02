@@ -27,7 +27,7 @@
             var d_name = updateQueue[0][0];
             var df_name = updateQueue[0][1];
             updateQueue.shift(1);
-            delete updateSet[d_name];
+            delete updateSet[d_name + '__' + df_name];
             
             // Update remote server
             if( devices[d_name] && devices[d_name][df_name] ) {
@@ -108,10 +108,10 @@
             devices[d_name][df_name] = []
         devices[d_name][df_name][key] = val;
 
-        if( !updateSet[d_name] ) {
+        if( !updateSet[d_name + '__' + df_name] ) {
             // Push to updateQueue
             updateQueue.push([d_name, df_name]);
-            updateSet[d_name] = true;
+            updateSet[d_name + '__' + df_name] = true;
         }
     }
 
