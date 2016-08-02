@@ -5,8 +5,8 @@
 
 ## ScratchX extention block
 
-#### set IoTtalk server __url__ __port__
-- setting IoTtalk server address
+#### set IoTtalk server __ip__ __port__
+- setting IoTtalk server url as `http://ip:port`
 
 
 #### create device __d\_name__ by model __dm\_name__
@@ -35,4 +35,9 @@
 #### update %s\'s feature %s[%s] = %s
 
 
-#### get %s\'s feature %s[%s]
+#### get device __d\_name__\'s feature __df\_name__[__key__]
+- get device's feature
+- because all datas on IoTtalk server are stored as array(list in python), so __key__ are required to be integer
+- if __d\_name__ not exist, return `device instance not exist`
+- if __df\_name__ not exist for specific device, return `device feature not exist`
+- if __key__ not exist, return `-1`

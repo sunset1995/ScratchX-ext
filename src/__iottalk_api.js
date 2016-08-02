@@ -76,6 +76,14 @@ function get(url, mac, feature, callback) {
         url: url + '/' + mac + '/' + feature,
         success: function(res) {
             ret = JSON.parse(res);
+            if( typeof ret !== 'object' || 
+                    !ret['samples'] ||
+                    !ret['samples'][0] ||
+                    !ret['samples'][0][1] ||
+                    !ret['samples'][0][1][0] )
+                ret = [];
+            else
+                ret = ret['samples'][0][1][0];
             console.log(res);
             console.log('Get success');
         },

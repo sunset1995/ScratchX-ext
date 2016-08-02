@@ -8,15 +8,37 @@
 
 
 
-    // Local cache
+    // Remote server url
     var url = '';
-    var devices = {}
+
+    // Local cache
+    var devices = {};
+
+    // Get data threshold
+    var getThreshold = 200;
+    var getTimestamp = Date.now();
 
 
+
+
+    // self used function
+    function __report(d_name, df_name, key, callback) {
+        if( !devices[d_name] )
+            callback('device instance not exist');
+        else if( !devices[d_name][df_name] )
+            callback('device feature not exist');
+        else if( typeof devices[d_name][df_name] === 'object' )
+            callback(
+                devices[d_name][df_name][parseInt(key, 10)] || 
+                devices[d_name][df_name][key.toString()] || 
+                -1);
+        else
+            callback(devices[d_name][df_name]);
+    }
 
     // Implement ScratchX function
-    function setserver(_url, _port) {
-        url = _url + ':' + _port;
+    function setserver(ip, port) {
+        url = 'http://' + ip + ':' + port;
     }
 
     function create(d_name, dm_name) {
@@ -51,23 +73,41 @@
     }
 
     function get(d_name, df_name, key, callback) {
-        //
+        if( Date.now() - getTimestamp <= getThreshold ) {
+            // Use local cache data
+            __report(d_name, df_name, key, callback);
+        }
+        else {
+            // Sync with remote data
+            getTimestamp = Date.now();
+            try {
+                api.get(url, d_name, df_name, function(ret) {
+                    // Update local cache
+                    if( !devices[d_name] )
+                        devices[d_name] = {};
+                    devices[d_name][df_name] = ret;
+
+                    __report(d_name, df_name, key, callback);
+                });
+            }
+            catch(e) {
+                callback('js bug, plase report to github');
+            }
+        }
     }
 
 
 
 
     // Scratch extentions
-    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'url', 'port');
+    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'ip', 'port');
     SXregister.add(create, ' ', 'create device %s by model %s', 'create', 'd_name', 'dm_name');
     SXregister.add(add, ' ', 'add feature %s to device %s', 'add', 'df_name', 'd_name');
     SXregister.add(register, 'w', 'register device %s', 'register', 'd_name');
     SXregister.add(detach, 'w', 'detach device %s', 'detach', 'd_name');
     SXregister.add(update, ' ', 'update device %s\'s feature %s[%s] = %s', 'update', 'd_name', 'df_name', 'key', 'val');
-    SXregister.add(get, 'R', 'get device %s\'s feature %s[%s]', 'get', 'd_name', 'df_name', 'key');
-    SXregister.ext._shutdown = function() {
-        console.log('_shutdown');
-    }
+    SXregister.add(get, 'R', 'get device %s\'s feature %s[%d]', 'get', 'd_name', 'df_name', '0');
+
 
 
 
