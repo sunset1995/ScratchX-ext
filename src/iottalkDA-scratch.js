@@ -10,9 +10,10 @@
 
     // Remote server url
     var url = '';
+    var id = '';
 
     // Local cache
-    var devices = {};
+    var cache = null;
 
     // Get data threshold
     var getThreshold = 200;
@@ -24,17 +25,15 @@
     var updateSet = {};
     function checkQueue() {
         if( updateQueue.length ) {
-            var d_name = updateQueue[0][0];
-            var df_name = updateQueue[0][1];
+            var id = updateQueue[0][0];
             updateQueue.shift(1);
-            delete updateSet[d_name + '__' + df_name];
+            delete updateSet[id];
             
             // Update remote server
-            if( devices[d_name] && devices[d_name][df_name] ) {
-                console.log(d_name)
-                console.log(df_name)
-                console.log(devices[d_name][df_name])
-                api.update(url, d_name, df_name, devices[d_name][df_name]);
+            if( cache && cache['ScratchX_output'] ) {
+                console.log(id)
+                console.log(cache['ScratchX_output'])
+                api.update(url, id, 'ScratchX_output', cache['ScratchX_output']);
             }
         }
 
@@ -46,76 +45,61 @@
 
 
     // Self used function
-    function __report(d_name, df_name, key, callback) {
-        if( !devices[d_name] )
-            callback('device instance not exist');
-        else if( !devices[d_name][df_name] )
-            callback('device feature not exist');
-        else if( typeof devices[d_name][df_name] === 'object' ) {
-            if( typeof devices[d_name][df_name][parseInt(key, 10)] !== 'undefined' )
-                callback(devices[d_name][df_name][parseInt(key, 10)]);
-            else if( typeof devices[d_name][df_name][key.toString()] !== 'undefined' )
-                callback(devices[d_name][df_name][key.toString()]);
+    function __report(key, callback) {
+        if( !cache || !cache['ScratchX_output'] )
+            callback('not exist');
+        else if( typeof cache['ScratchX_output'] === 'object' ) {
+            if( typeof cache['ScratchX_output'][parseInt(key, 10)] !== 'undefined' )
+                callback(cache['ScratchX_output'][parseInt(key, 10)]);
+            else if( typeof cache['ScratchX_output'][key.toString()] !== 'undefined' )
+                callback(cache['ScratchX_output'][key.toString()]);
             else
                 callback(-1);
         }
         else
-            callback(devices[d_name][df_name]);
+            callback(cache['ScratchX_output']);
     }
 
     // Implement ScratchX function
-    function setserver(ip, port) {
+    function setserver(mac_addr, ip, port) {
         url = 'http://' + ip + ':' + port;
-    }
-
-    function create(d_name, dm_name) {
-        devices[d_name] = {
+        id = mac_addr;
+        cache = {
             'profile': {
-                'd_name': d_name,
-                'dm_name': dm_name,
+                'd_name': 'ScratchX_' + id,
+                'dm_name': 'ScratchX',
                 'is_sim': false,
-                'df_list': [],
+                'df_list': ['ScratchX_input', 'ScratchX_output'],
             }
         };
-    }
 
-    function add(df_name, d_name){
-        if( devices[d_name] && devices[d_name]['profile']['df_list'].indexOf(df_name)===-1 )
-            devices[d_name]['profile']['df_list'].push(df_name);
-    }
-
-    function register(d_name, callback) {
-        if( !devices[d_name] || url === '' )
-            callback();
-        else
-            api.register(url, d_name, devices[d_name]['profile'], callback);
-    }
-
-    function detach(d_name, callback) {
         if( url === '' )
             callback();
         else
-            api.detach(url, d_name, callback);
+            api.register(url, id, cache['profile'], callback);
     }
 
-    function update(d_name, df_name, key, val) {
+    function detach(callback) {
         if( url === '' )
+            callback();
+        else
+            api.detach(url, id, callback);
+    }
+
+    function update(key, val) {
+        if( url === '' || !cache )
             return;
 
-        if( !devices[d_name] )
-            devices[d_name] = {};
-        if( !devices[d_name][df_name] )
-            devices[d_name][df_name] = []
-        devices[d_name][df_name][key] = val;
+        cache['ScratchX_output'][key] = val;
 
-        if( !updateSet[d_name + '__' + df_name] ) {
+        if( !updateSet[id] ) {
             // Push to updateQueue
-            updateQueue.push([d_name, df_name]);
-            updateSet[d_name + '__' + df_name] = true;
+            updateQueue.push(id);
+            updateSet[id] = true;
         }
     }
 
-    function get(d_name, df_name, key, callback) {
+    function get(key, callback) {
         if( url === '' ) {
             callback('server url not given');
             return;
@@ -123,7 +107,7 @@
 
         if( Date.now() - getTimestamp <= getThreshold ) {
             // Use local cache data
-            __report(d_name, df_name, key, callback);
+            __report(key, callback);
         }
         else {
             // Sync with remote data
@@ -131,11 +115,11 @@
             try {
                 api.get(url, d_name, df_name, function(ret) {
                     // Update local cache
-                    if( !devices[d_name] )
-                        devices[d_name] = {};
-                    devices[d_name][df_name] = ret;
+                    console.log(ret)
+                    console.log(typeof ret)
+                    cache['ScratchX_output'] = ret;
 
-                    __report(d_name, df_name, key, callback);
+                    __report(key, callback);
                 });
             }
             catch(e) {
@@ -148,14 +132,11 @@
 
 
     // Scratch extentions
-    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'ip', 'port');
-    SXregister.add(create, ' ', 'create device %s by model %s', 'create', 'd_name', 'dm_name');
-    SXregister.add(add, ' ', 'add feature %s to device %s', 'add', 'df_name', 'd_name');
-    SXregister.add(register, 'w', 'register device %s', 'register', 'd_name');
-    SXregister.add(detach, 'w', 'detach device %s', 'detach', 'd_name');
-    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %s', 'updateStr', 'd_name', 'df_name', 'key', 'val');
-    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %d', 'updateNum', 'd_name', 'df_name', 'key', '0');
-    SXregister.add(get, 'R', 'get device %s\'s feature %s %d', 'get', 'd_name', 'df_name', '0');
+    SXregister.add(setserver, 'w', 'register %s IoTtalk server %s %s', 'setserver', 'mac_addr', 'ip', 'port');
+    SXregister.add(detach, 'w', 'detach device', 'detach');
+    SXregister.add(update, ' ', 'update device %s = %s', 'updateStr', 'key', 'val');
+    SXregister.add(update, ' ', 'update device %s = %d', 'updateNum', 'key', '0');
+    SXregister.add(get, 'R', 'get %s', 'get', 'd_name', 'key');
 
 
 
