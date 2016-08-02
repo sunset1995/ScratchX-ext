@@ -1,5 +1,13 @@
 # iottalkDA-scratch document
 
+> Note: not all ScratchX extension are credible  
+
+
+1. Open [scratchX](http://scratchx.org/)
+2. Click `Open Extension URL`
+3. paste the extension code's url [https://sunset1995.github.io/snp/extensions/iottalkDA-scratch.js](https://sunset1995.github.io/snp/extensions/iottalkDA-scratch.js)
+4. Click `Open`
+
 
 
 
