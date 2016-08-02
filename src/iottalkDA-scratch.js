@@ -23,6 +23,11 @@
 
     // self used function
     function __report(d_name, df_name, key, callback) {
+        console.log(d_name)
+        console.log(df_name)
+        console.log(key)
+        console.log(typeof key)
+        console.log(devices)
         if( !devices[d_name] )
             callback('device instance not exist');
         else if( !devices[d_name][df_name] )
@@ -83,6 +88,8 @@
             try {
                 api.get(url, d_name, df_name, function(ret) {
                     // Update local cache
+                    console.log(ret)
+                    console.log(typeof ret)
                     if( !devices[d_name] )
                         devices[d_name] = {};
                     devices[d_name][df_name] = ret;
