@@ -54,4 +54,9 @@ The device profile and data will be stored in local as *cache*
     - if `df_name` not exist for specific device, return `device feature not exist`
     - if `key` not exist, return `-1`
     - **blocking** until all works done
-    - **Note!!** please make sure get interval at least **200ms**, or it will return according local *cache*
+    - **Note!!** please make sure get interval at least **200ms**. All get within threshold(200ms) will only look for local *cache* and never issue request.
+
+
+
+
+## Possible scenario
