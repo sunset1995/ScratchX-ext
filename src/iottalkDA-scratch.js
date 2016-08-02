@@ -94,6 +94,7 @@
     }
 
     function update(key, val) {
+        console.log(cache)
         console.log(cache['ScratchX_output'])
         if( url === '' || !cache )
             return;
