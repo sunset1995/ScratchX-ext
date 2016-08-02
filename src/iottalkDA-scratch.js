@@ -26,17 +26,19 @@
         console.log(d_name)
         console.log(df_name)
         console.log(key)
-        console.log(typeof key)
         console.log(devices)
         if( !devices[d_name] )
             callback('device instance not exist');
         else if( !devices[d_name][df_name] )
             callback('device feature not exist');
-        else if( typeof devices[d_name][df_name] === 'object' )
-            callback(
-                devices[d_name][df_name][parseInt(key, 10)] || 
-                devices[d_name][df_name][key.toString()] || 
-                -1);
+        else if( typeof devices[d_name][df_name] === 'object' ) {
+            if( typeof devices[d_name][df_name][parseInt(key, 10)] !== 'undefined' )
+                callback(devices[d_name][df_name][parseInt(key, 10)]);
+            else if( typeof devices[d_name][df_name][key.toString()] !== 'undefined' )
+                callback(devices[d_name][df_name][key.toString()]);
+            else
+                callback(-1);
+        }
         else
             callback(devices[d_name][df_name]);
     }
