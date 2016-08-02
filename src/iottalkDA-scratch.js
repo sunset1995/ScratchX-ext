@@ -153,7 +153,8 @@
     SXregister.add(add, ' ', 'add feature %s to device %s', 'add', 'df_name', 'd_name');
     SXregister.add(register, 'w', 'register device %s', 'register', 'd_name');
     SXregister.add(detach, 'w', 'detach device %s', 'detach', 'd_name');
-    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %s', 'update', 'd_name', 'df_name', 'key', 'val');
+    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %s', 'updateStr', 'd_name', 'df_name', 'key', 'val');
+    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %d', 'updateNum', 'd_name', 'df_name', 'key', '0');
     SXregister.add(get, 'R', 'get device %s\'s feature %s %d', 'get', 'd_name', 'df_name', '0');
 
 
