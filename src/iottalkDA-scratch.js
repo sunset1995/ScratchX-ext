@@ -95,10 +95,10 @@
 
     function update(key, val) {
         console.log(cache)
-        console.log(cache['ScratchX_output'])
-        if( url === '' || !cache )
+        if( url === '' || !cache['profile'] )
             return;
-
+        
+        console.log(cache['ScratchX_output'])
         cache['ScratchX_output'][key] = val;
         console.log(cache['ScratchX_output'])
 
