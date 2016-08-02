@@ -98,13 +98,16 @@
         console.log([key, val])
 
         cache['ScratchX_output'][key] = val;
+        
+        console.log(id)
         console.log(cache['ScratchX_output'])
+        api.update(url, id, 'ScratchX_output', cache['ScratchX_output']);
 
-        if( !updateSet[id] ) {
+        /*if( !updateSet[id] ) {
             // Push to updateQueue
             updateQueue.push(id);
             updateSet[id] = true;
-        }
+        }*/
     }
 
     function get(key, callback) {
