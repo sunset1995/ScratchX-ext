@@ -23,15 +23,12 @@
 
     // self used function
     function __report(d_name, df_name, key, callback) {
-        console.log(d_name)
-        console.log(df_name)
-        console.log(key)
-        console.log(devices)
         if( !devices[d_name] )
             callback('device instance not exist');
         else if( !devices[d_name][df_name] )
             callback('device feature not exist');
         else if( typeof devices[d_name][df_name] === 'object' ) {
+            console.log(devices[d_name][df_name]);
             if( typeof devices[d_name][df_name][parseInt(key, 10)] !== 'undefined' )
                 callback(devices[d_name][df_name][parseInt(key, 10)]);
             else if( typeof devices[d_name][df_name][key.toString()] !== 'undefined' )
