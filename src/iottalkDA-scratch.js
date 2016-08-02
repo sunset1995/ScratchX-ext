@@ -28,7 +28,6 @@
         else if( !devices[d_name][df_name] )
             callback('device feature not exist');
         else if( typeof devices[d_name][df_name] === 'object' ) {
-            console.log(devices[d_name][df_name]);
             if( typeof devices[d_name][df_name][parseInt(key, 10)] !== 'undefined' )
                 callback(devices[d_name][df_name][parseInt(key, 10)]);
             else if( typeof devices[d_name][df_name][key.toString()] !== 'undefined' )
@@ -87,8 +86,6 @@
             try {
                 api.get(url, d_name, df_name, function(ret) {
                     // Update local cache
-                    console.log(ret)
-                    console.log(typeof ret)
                     if( !devices[d_name] )
                         devices[d_name] = {};
                     devices[d_name][df_name] = ret;
@@ -111,8 +108,8 @@
     SXregister.add(add, ' ', 'add feature %s to device %s', 'add', 'df_name', 'd_name');
     SXregister.add(register, 'w', 'register device %s', 'register', 'd_name');
     SXregister.add(detach, 'w', 'detach device %s', 'detach', 'd_name');
-    SXregister.add(update, ' ', 'update device %s\'s feature %s [ %s ] = %s', 'update', 'd_name', 'df_name', 'key', 'val');
-    SXregister.add(get, 'R', 'get device %s\'s feature %s [ %d ] ', 'get', 'd_name', 'df_name', '0');
+    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %s', 'update', 'd_name', 'df_name', 'key', 'val');
+    SXregister.add(get, 'R', 'get device %s\'s feature %s %d', 'get', 'd_name', 'df_name', '0');
 
 
 
