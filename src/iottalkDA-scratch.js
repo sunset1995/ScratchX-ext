@@ -61,7 +61,8 @@
     }
 
     // Implement ScratchX function
-    function setserver(mac_addr, ip, port) {
+    function setserver(mac_addr, ip, port, callback) {
+        console.log(mac_addr, ip, port)
         url = 'http://' + ip + ':' + port;
         id = mac_addr;
         cache = {
@@ -72,6 +73,8 @@
                 'df_list': ['ScratchX_input', 'ScratchX_output'],
             }
         };
+        console.log(url)
+        console.log(id)
 
         if( url === '' )
             callback();
@@ -134,8 +137,8 @@
     // Scratch extentions
     SXregister.add(setserver, 'w', 'register %s IoTtalk server %s %s', 'setserver', 'mac_addr', 'ip', 'port');
     SXregister.add(detach, 'w', 'detach device', 'detach');
-    SXregister.add(update, ' ', 'update device %s = %s', 'updateStr', 'key', 'val');
-    SXregister.add(update, ' ', 'update device %s = %d', 'updateNum', 'key', '0');
+    SXregister.add(update, ' ', 'update device %s = %s', 'update', 'key', 'val');
+    SXregister.add(update, ' ', 'update device %s = %d', 'update', 'key', '0');
     SXregister.add(get, 'R', 'get %s', 'get', 'key');
 
 
