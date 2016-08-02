@@ -1,4 +1,5 @@
 function register(url, mac, profile, callback) {
+    console.log(profile)
     $.ajax({
         type: 'POST',
         url: url + '/' + mac,

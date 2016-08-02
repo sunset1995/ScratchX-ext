@@ -113,7 +113,7 @@
             // Sync with remote data
             getTimestamp = Date.now();
             try {
-                api.get(url, d_name, df_name, function(ret) {
+                api.get(url, id, 'ScratchX_output', function(ret) {
                     // Update local cache
                     console.log(ret)
                     console.log(typeof ret)
@@ -136,7 +136,7 @@
     SXregister.add(detach, 'w', 'detach device', 'detach');
     SXregister.add(update, ' ', 'update device %s = %s', 'updateStr', 'key', 'val');
     SXregister.add(update, ' ', 'update device %s = %d', 'updateNum', 'key', '0');
-    SXregister.add(get, 'R', 'get %s', 'get', 'd_name', 'key');
+    SXregister.add(get, 'R', 'get %s', 'get', 'key');
 
 
 
