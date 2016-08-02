@@ -18,6 +18,30 @@
     var getThreshold = 200;
     var getTimestamp = Date.now();
 
+    // Update queue
+    var updateThreshold = 200;
+    var updateQueue = [];
+    var updateSet = {};
+    function checkQueue() {
+        if( updateQueue.length ) {
+            var d_name = updateQueue[0][0];
+            var df_name = updateQueue[0][1];
+            updateQueue.shift(1);
+            delete updateSet[d_name];
+            
+            // Update remote server
+            if( devices[d_name] && devices[d_name][df_name] ) {
+                console.log(d_name)
+                console.log(df_name)
+                console.log(devices[d_name][df_name])
+                api.update(url, d_name, df_name, devices[d_name][df_name]);
+            }
+        }
+
+        setTimeout(checkQueue, updateThreshold);
+    }
+    setTimeout(checkQueue, 2000);
+
 
 
 
@@ -68,14 +92,35 @@
     }
 
     function detach(d_name, callback) {
-        api.detach(url, d_name, callback);
+        if( url === '' )
+            callback();
+        else
+            api.detach(url, d_name, callback);
     }
 
     function update(d_name, df_name, key, val) {
-        //
+        if( url === '' )
+            return;
+
+        if( !devices[d_name] )
+            devices[d_name] = {};
+        if( !devices[d_name][df_name] )
+            devices[d_name][df_name] = []
+        devices[d_name][df_name][key] = val;
+
+        if( !updateSet[d_name] ) {
+            // Push to updateQueue
+            updateQueue.push([d_name, df_name]);
+            updateSet[d_name] = true;
+        }
     }
 
     function get(d_name, df_name, key, callback) {
+        if( url === '' ) {
+            callback('server url not given');
+            return;
+        }
+
         if( Date.now() - getTimestamp <= getThreshold ) {
             // Use local cache data
             __report(d_name, df_name, key, callback);
