@@ -95,6 +95,7 @@
 
     function update(key, val) {
         console.log(cache);
+        console.log([key, val])
 
         cache['ScratchX_output'][key] = val;
         console.log(cache['ScratchX_output'])
@@ -142,8 +143,8 @@
     SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'ip', 'port');
     SXregister.add(register, 'w', 'register device as %s', 'register', 'mac_addr');
     SXregister.add(detach, 'w', 'detach device', 'detach');
-    SXregister.add(update, ' ', 'update device %s = %s', 'update', 'key', 'val');
-    SXregister.add(update, ' ', 'update device %s = %d', 'update', 'key', '0');
+    SXregister.add(update, ' ', 'update device %s = %s', 'updateStr', 'key', 'val');
+    SXregister.add(update, ' ', 'update device %s = %d', 'updateNum', 'key', '0');
     SXregister.add(get, 'R', 'get %s', 'get', 'key');
 
 
