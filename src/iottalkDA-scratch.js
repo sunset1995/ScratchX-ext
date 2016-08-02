@@ -6,98 +6,67 @@
     var SXregister = require('__scratchX-register.js');
 
 
-    // Define shared variable
-    var config = {
-        url: null,
-        mac: null,
-        registered: false,
-    };
 
-    var data = {};
 
-    const Df_name = 'Json_string';
-    var profile = {
-        'd_name': 'ScratchX',
-        'dm_name': 'ScratchX',
-        'is_sim': false,
-        'df_list': [Df_name]
-    };
+    // Local cache
+    var url = '';
+    var devices = {}
 
 
 
-    // Implement scratchX extenion
-    function setServer(url) {
-        config.url = url;
+    // Implement ScratchX function
+    function setserver(_url, _port) {
+        url = _url + ':' + _port;
     }
 
-
-    function register(mac, callback) {
-        if( config.url === null || config.mac !== null ) {
-            callback();
-            return;
-        }
-
-        profile.d_name = mac;
-        config.mac = mac;
-        var cb = function() {
-            config.registered = true;
-            callback();
-        };
-        api.register(config.url, mac, profile, cb);
-    }
-
-    function update(key, val, callback) {
-        data[key] = val;
-
-        if( config.url === null ) {
-            callback();
-            return;
-        }
-
-        api.update(config.url, config.mac, Df_name, [data], callback);
-    }
-
-    function get(mac, feature, key, callback) {
-        if( config.url === null ) {
-            callback();
-            return;
-        }
-
-        var cb = function(ret) {
-            if( typeof ret !== 'object' || 
-                    !ret['samples'] ||
-                    !ret['samples'][0] ||
-                    !ret['samples'][0][1] ) {
-                callback(-1);
-                return;
-            }
-            try {
-                var res = ret['samples'][0][1][0];
-                if( typeof res === 'object' )
-                    callback(res[key] || res[parseInt(key, 10)] || -1);
-                else
-                    callback(res);
-            }
-            catch(e) {
-                console.log(e);
-                console.log('error occur');
-                callback(-1);
+    function create(d_name, dm_name) {
+        devices[d_name] = {
+            'profile': {
+                'd_name': d_name,
+                'dm_name': dm_name,
+                'is_sim': false,
+                'df_list': [],
             }
         };
-        api.get(config.url, mac, feature, cb);
     }
-    
+
+    function add(df_name, d_name){
+        if( devices[d_name] )
+            devices[d_name]['profile']['df_list'].push(df_name);
+    }
+
+    function register(d_name, callback) {
+        if( !devices[d_name] || url === '' )
+            callback();
+        else
+            api.register(url, d_name, devices[d_name]['profile'], callback);
+    }
+
+    function detach(d_name, callback) {
+        api.detach(url, d_name, callback);
+    }
+
+    function update(d_name, df_name, key, val) {
+        //
+    }
+
+    function get(d_name, df_name, key, callback) {
+        //
+    }
+
 
 
 
     // Scratch extentions
-    SXregister.add(setServer, ' ', 'set remote server as %s', 'setServer', 'url');
-    SXregister.add(register, 'w', 'register mac address as %s', 'register', 'mac');
-    SXregister.add(update, 'w', 'update %s %s', 'update', 'key', 'val');
-    SXregister.add(get, 'R', 'get %s %s %s', 'get', 'mac', 'feature', 'key');
-    SXregister._shutdown = function() {
-        if( config.mac !== null )
-            api.detach(config.url, config.mac);
+    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'url', 'port');
+    SXregister.add(create, ' ', 'create device %s by model %s', 'create', 'd_name', 'dm_name');
+    SXregister.add(add, ' ', 'add feature %s to device %s', 'add', 'df_name', 'd_name');
+    SXregister.add(register, 'w', 'register device %s', 'register', 'd_name');
+    SXregister.add(detach, 'w', 'detach device %s', 'detach', 'd_name');
+    SXregister.add(update, ' ', 'update device %s\'s feature %s[%s] = %s', 'update', 'd_name', 'df_name', 'key', 'val');
+    SXregister.add(get, 'R', 'get device %s\'s feature %s[%s]', 'get', 'd_name', 'df_name', 'key');
+    SXregister.ext._shutdown = function() {
+        console.log('_shutdown');
     }
 
 
