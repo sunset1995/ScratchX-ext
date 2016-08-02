@@ -41,3 +41,4 @@
 - if __d\_name__ not exist, return `device instance not exist`
 - if __df\_name__ not exist for specific device, return `device feature not exist`
 - if __key__ not exist, return `-1`
+- Note!! please make sure get interval at least 200ms, or it will return according local cache
