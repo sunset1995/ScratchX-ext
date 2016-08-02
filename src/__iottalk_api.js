@@ -79,11 +79,10 @@ function get(url, mac, feature, callback) {
             if( typeof ret !== 'object' || 
                     !ret['samples'] ||
                     !ret['samples'][0] ||
-                    !ret['samples'][0][1] ||
-                    !ret['samples'][0][1][0] )
+                    !ret['samples'][0][1] )
                 ret = [];
             else
-                ret = ret['samples'][0][1][0];
+                ret = ret['samples'][0][1];
             console.log(res);
             console.log('Get success');
         },
