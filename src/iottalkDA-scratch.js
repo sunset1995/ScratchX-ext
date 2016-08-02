@@ -21,7 +21,7 @@
 
 
 
-    // self used function
+    // Self used function
     function __report(d_name, df_name, key, callback) {
         if( !devices[d_name] )
             callback('device instance not exist');
@@ -56,7 +56,7 @@
     }
 
     function add(df_name, d_name){
-        if( devices[d_name] )
+        if( devices[d_name] && devices[d_name]['profile']['df_list'].indexOf(df_name)===-1 )
             devices[d_name]['profile']['df_list'].push(df_name);
     }
 
