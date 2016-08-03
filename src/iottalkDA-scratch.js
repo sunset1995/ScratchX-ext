@@ -94,8 +94,11 @@
     }
 
     function update(key, val) {
+        console.log('?????????????')
         console.log(cache);
         console.log([key, val])
+        console.log(id)
+        console.log(cache['ScratchX_output'])
 
         cache['ScratchX_output'][key] = val;
         
