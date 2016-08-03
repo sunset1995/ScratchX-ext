@@ -55,36 +55,29 @@
     }
 
     // Implement ScratchX function
-    function setserver(ip, port) {
+    function setserver(mac_addr, ip, port, callback) {
         url = 'http://' + ip + ':' + port;
-        console.log(url)
-    }
-
-    function register(mac_addr, callback) {
-        console.log(mac_addr)
         id = mac_addr;
+
         cache = {
             'profile': {
-                'd_name': 'ScratchX_' + id,
+                'd_name': id,
                 'dm_name': 'ScratchX',
                 'is_sim': false,
                 'df_list': ['ScratchX_input', 'ScratchX_output'],
             }
         };
-        console.log(url)
-        console.log(id)
 
-        if( url === '' )
-            callback();
-        else
-            api.register(url, id, cache['profile'], callback);
+        api.register(url, id, cache['profile'], callback);
     }
 
     function detach(callback) {
         if( url === '' )
             callback();
-        else
+        else {
+            url = '';
             api.detach(url, id, callback);
+        }
     }
 
     function update(key, val, callback) {
@@ -136,8 +129,7 @@
 
 
     // Scratch extentions
-    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'ip', 'port');
-    SXregister.add(register, 'w', 'register device as %s', 'mac_addr');
+    SXregister.add(setserver, 'w', 'register %s to IoTtalk server %s %s', 'mac_addr', 'ip', 'port');
     SXregister.add(detach, 'w', 'detach device');
     SXregister.add(update, 'w', 'update device %s = %s', 'key', 'val');
     SXregister.add(update, 'w', 'update device %s = %d', 'key', '0');
@@ -145,11 +137,20 @@
 
 
 
-
     ScratchExtensions.register(
         'Chatroom extension',
         SXregister.descriptor,
         SXregister.ext);
+    
+
+
+
+    // Detach when close
+    SXregister.ext._shutdown = detach;
+    window.onunload = detach;
+    window.onbeforeunload = detach;
+    window.onclose = detach;
+    window.onpagehide = detach;
 
 
 })({});
