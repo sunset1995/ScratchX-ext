@@ -12,14 +12,17 @@ var descriptor = {
     ],
 };
 
+var __cnt = 0;
+
 module.exports = {
     'add': function(func, opCode, label) {
-        var randomKey = Math.random().toString();
-        ext[randomKey] = func;
-        descriptor.blocks.push([opCode, label, randomKey]);
+        ext[__cnt.toString()] = func;
+        descriptor.blocks.push([opCode, label, __cnt.toString()]);
         var id = descriptor.blocks.length - 1;
         for(let i=3; i<arguments.length; ++i)
             descriptor.blocks[id].push(arguments[i]);
+
+        ++__cnt;
     },
     ext: ext,
     descriptor: descriptor,
