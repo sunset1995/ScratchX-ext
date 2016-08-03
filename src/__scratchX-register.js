@@ -15,7 +15,6 @@ var descriptor = {
 module.exports = {
     'add': function(func, opCode, label) {
         var randomKey = Math.random().toString();
-        console.log(randomKey);
         ext[randomKey] = func;
         descriptor.blocks.push([opCode, label, randomKey]);
         var id = descriptor.blocks.length - 1;
