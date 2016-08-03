@@ -33,7 +33,7 @@
             if( cache && cache['ScratchX_output'] ) {
                 console.log(id)
                 console.log(cache['ScratchX_output'])
-                api.update(url, id, 'ScratchX_output', cache['ScratchX_output']);
+                api.update(url, id, 'ScratchX_output', [cache['ScratchX_output']]);
             }
         }
 
