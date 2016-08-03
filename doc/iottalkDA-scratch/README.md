@@ -11,52 +11,58 @@
 
 
 
-## ScratchX extention block
-
-The device profile and data will be stored in local as *cache*
-
-- set IoTtalk server `ip` `port`
-    - setting IoTtalk server url as `http://ip:port`
+## Before start
+Make sure IoTtalk server has alread created a module called `ScratchX` with one input feature called `ScratchX_input` and one output feature called `ScratchX_output` on your IoTtalk server.  
+Note! The name of the module and feature is really important, please make sure that you don't have typo.  
 
 
-- create device `d_name` by model `dm_name`
-    - create a device in local *cache*
-    - if device instance already existed in local *cache*, replaced it
+Follow below steps to create IDF `ScratchX_input`, ODF `ScratchX_output`, DM `ScratchX`:  
+1. Add new IDF called `ScratchX_input`, make sure min and max column are blank  
+    ![](images/makeIDF.png)  
+2. Add new ODF called `ScratchX_output` like above  
+3. Click `Device Feature` button on the left top corner in order to switch to module setting page  
+4. Click add new DM  
+5. Select `ScratchX_input` and `ScratchX_output` then saved  
+    ![](images/makeDM.png)  
 
 
-- add feature `df_name` to device `d_name`
-    - add feature to device in local *cache*
-    - if device not exists in *cache*, do nothing
 
 
-- register device `d_name`
-    - register device in *cache* to remote IoTtalk server
-    - if device instance not exist in local *cache*, do nothing
-    - if IoTtalk server already have the device, replaced it
-    - **blocking** until all works done
+## iottalkDA-scratch extension blocks
+- ![](images/register-block.png)
+    - setting IoTtalk server url as `http://ip:port` and registered ScratchX DA with mac address `mac_addr`
+    - if not registered, all other blocks will not work
 
 
-- detach device `d_name`
+- ![](images/detach-block.png)
     - detach device on IoTtalk server
-    - don't care about local *cache*
-    - **blocking** until all works done
 
 
-- update `d_name`'s feature `df_name` `key` = `val`
-    - update device's feature in local *cache*, and push `d_name` to *update queue*
-    - every **200ms**, *update queue* will pop one `d_name` and put the new data to IoTtalk server
+- ![](images/updateStr-block.png)
+    - update your `ScratchX_input` feature to IoTtalk server
+    - the `val` will be converted to string type
 
 
-- get device `d_name`'s feature `df_name` `key`
-    - get device's feature from IoTtalk server, and update to local *cache*
-    - because all datas on IoTtalk server are stored as array(list in python), so `key` are required to be integer
-    - if `d_name` not exist, return `device instance not exist`
-    - if `df_name` not exist for specific device, return `device feature not exist`
-    - if `key` not exist, return `-1`
-    - **blocking** until all works done
-    - **Note!!** please make sure get interval at least **200ms**. All get within threshold(200ms) will only look for local *cache* and never issue request.
+- ![](images/updateNum-block.png)
+    - like above one
+    - the `val` will be converted to number type
+
+
+- ![](images/get-block.png)
+    - get your `ScratchX_output` feature from IoTtalk server
+    - if `ScratchX_output` is not an object(dict in python) or array(list in python), the `key` will be ignored and directly get the val of `ScratchX_output`
+
+You can pretend all blocks described above are blocking.
 
 
 
 
-## Possible scenario
+## Will you flooding http request ??
+No, this extension already handle for you.  
+More precisely, `update` will only update local *cache*. *cache* will be checked updated or not every **200ms**, issuing `PUT` request only when *cache* updated.  
+Also. `get` has a threshold which is **200ms**. Within threshold, you will be given data in *cache* as result.  
+
+
+
+
+## Examples
