@@ -141,8 +141,8 @@
     // Scratch extentions
     SXregister.add(setserver, 'w', 'register %s to IoTtalk server %s %s', 'mac_addr', 'ip', 'port');
     SXregister.add(detach, 'w', 'detach device');
-    SXregister.add(updateStr, 'w', 'update device %s = %s', 'key', 'val');
-    SXregister.add(updateNum, 'w', 'update device %s = %d', 'key', '0');
+    SXregister.add(updateStr, 'w', 'update %s = %s', 'key', 'val');
+    SXregister.add(updateNum, 'w', 'update %s = %d', 'key', '0');
     SXregister.add(get, 'R', 'get %s', 'key');
 
 
