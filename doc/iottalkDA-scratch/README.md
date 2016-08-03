@@ -79,13 +79,13 @@ Also. `get` has a threshold which is **200ms**. Within threshold, you will be gi
 1. Create a project like below picture.  
     ![](images/ex2-create-project.png)
 2. The getspeed function in above picture:  
-    ```python3
-    def run(*args):
-        if 'Speed' in args[0]:
-            return args[0]['Speed']
-        else:
-            return 0 
-    ```
+```python3
+def run(*args):
+    if 'Speed' in args[0]:
+        return args[0]['Speed']
+    else:
+        return 0 
+```
 3. Implement Scratch  
     ![](images/ex2-scratch.png)
 4. Done. Below is the result after entering 15 in Scratch  
