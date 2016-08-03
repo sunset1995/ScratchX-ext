@@ -21,20 +21,14 @@
 
     // Update queue
     var updateThreshold = 200;
-    var updateQueue = [];
-    var updateSet = {};
+    var updateFlag = false;
     function checkQueue() {
-        if( updateQueue.length ) {
-            var id = updateQueue[0];
-            updateQueue.shift(1);
-            delete updateSet[id];
+        if( updateFlag ) {
+            updateFlag = false;
             
             // Update remote server
-            if( cache && cache['ScratchX_input'] ) {
-                console.log(id)
-                console.log(cache['ScratchX_input'])
+            if( cache && cache['ScratchX_input'] )
                 api.update(url, id, 'ScratchX_input', [cache['ScratchX_input']]);
-            }
         }
 
         setTimeout(checkQueue, updateThreshold);
@@ -142,12 +136,12 @@
 
 
     // Scratch extentions
-    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'ip', 'port');
-    SXregister.add(register, 'w', 'register device as %s', 'register', 'mac_addr');
-    SXregister.add(detach, 'w', 'detach device', 'detach');
-    SXregister.add(update, 'w', 'update device %s = %s', 'updateStr', 'key', 'val');
-    SXregister.add(update, 'w', 'update device %s = %d', 'updateNum', 'key', '0');
-    SXregister.add(get, 'R', 'get %s', 'get', 'key');
+    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'ip', 'port');
+    SXregister.add(register, 'w', 'register device as %s', 'mac_addr');
+    SXregister.add(detach, 'w', 'detach device');
+    SXregister.add(update, 'w', 'update device %s = %s', 'key', 'val');
+    SXregister.add(update, 'w', 'update device %s = %d', 'key', '0');
+    SXregister.add(get, 'R', 'get %s', 'key');
 
 
 

@@ -13,9 +13,11 @@ var descriptor = {
 };
 
 module.exports = {
-    'add': function(func, opCode, label, methodName) {
-        ext[methodName] = func;
-        descriptor.blocks.push([opCode, label, methodName]);
+    'add': function(func, opCode, label) {
+        var randomKey = Math.random().toString();
+        console.log(randomKey);
+        ext[randomKey] = func;
+        descriptor.blocks.push([opCode, label, randomKey]);
         var id = descriptor.blocks.length - 1;
         for(let i=4; i<arguments.length; ++i)
             descriptor.blocks[id].push(arguments[i]);

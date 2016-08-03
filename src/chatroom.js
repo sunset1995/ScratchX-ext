@@ -44,12 +44,12 @@
 
 
     // Scratch extentions
-    SXregister.add(update, 'w', 'update %s %s', 'update', 'feature', 'val');
-    SXregister.add(broadcast, 'w', 'broadcast %s', 'broadcast', 'signal');
-    SXregister.add(isExist, 'r', 'is %s exist', 'isExist', 'id');
-    SXregister.add(get, 'r', 'get %s %s', 'get', 'id', 'feature');
-    SXregister.add(sidListSize, 'R', 'member list size', 'sidListSize');
-    SXregister.add(sidListFind, 'r', 'get %d th\'s member id', 'sidListFind', 0);
+    SXregister.add(update, 'w', 'update %s %s', 'feature', 'val');
+    SXregister.add(broadcast, 'w', 'broadcast %s', 'signal');
+    SXregister.add(isExist, 'r', 'is %s exist', 'id');
+    SXregister.add(get, 'r', 'get %s %s', 'id', 'feature');
+    SXregister.add(sidListSize, 'R', 'member list size');
+    SXregister.add(sidListFind, 'r', 'get %d th\'s member id', 0);
 
 
 

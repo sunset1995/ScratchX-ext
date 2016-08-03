@@ -148,14 +148,14 @@
 
 
     // Scratch extentions
-    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'setserver', 'ip', 'port');
-    SXregister.add(create, ' ', 'create device %s by model %s', 'create', 'd_name', 'dm_name');
-    SXregister.add(add, ' ', 'add feature %s to device %s', 'add', 'df_name', 'd_name');
-    SXregister.add(register, 'w', 'register device %s', 'register', 'd_name');
-    SXregister.add(detach, 'w', 'detach device %s', 'detach', 'd_name');
-    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %s', 'updateStr', 'd_name', 'df_name', 'key', 'val');
-    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %d', 'updateNum', 'd_name', 'df_name', 'key', '0');
-    SXregister.add(get, 'R', 'get device %s\'s feature %s %d', 'get', 'd_name', 'df_name', '0');
+    SXregister.add(setserver, ' ', 'set IoTtalk server %s %s', 'ip', 'port');
+    SXregister.add(create, ' ', 'create device %s by model %s', 'd_name', 'dm_name');
+    SXregister.add(add, ' ', 'add feature %s to device %s', 'df_name', 'd_name');
+    SXregister.add(register, 'w', 'register device %s', 'd_name');
+    SXregister.add(detach, 'w', 'detach device %s', 'd_name');
+    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %s', 'd_name', 'df_name', 'key', 'val');
+    SXregister.add(update, ' ', 'update device %s\'s feature %s %s = %d', 'd_name', 'df_name', 'key', '0');
+    SXregister.add(get, 'R', 'get device %s\'s feature %s %d', 'd_name', 'df_name', '0');
 
 
 
