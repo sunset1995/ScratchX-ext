@@ -84,7 +84,21 @@
         }
     }
 
-    function update(key, val, callback) {
+    function updateStr(key, val, callback) {
+        val = val.toString();
+
+        if( !cache || !cache['ScratchX_input'] )
+            callback('Please register first');
+        else {
+            cache['ScratchX_input'][key] = val;
+            updateFlag = true;
+            callback();
+        }
+    }
+
+    function updateNum(key, val, callback) {
+        val = Number(val) || -1;
+
         if( !cache || !cache['ScratchX_input'] )
             callback('Please register first');
         else {
@@ -127,8 +141,8 @@
     // Scratch extentions
     SXregister.add(setserver, 'w', 'register %s to IoTtalk server %s %s', 'mac_addr', 'ip', 'port');
     SXregister.add(detach, 'w', 'detach device');
-    SXregister.add(update, 'w', 'update device %s = %s', 'key', 'val');
-    SXregister.add(update, 'w', 'update device %s = %d', 'key', '0');
+    SXregister.add(updateStr, 'w', 'update device %s = %s', 'key', 'val');
+    SXregister.add(updateNum, 'w', 'update device %s = %d', 'key', '0');
     SXregister.add(get, 'R', 'get %s', 'key');
 
 
