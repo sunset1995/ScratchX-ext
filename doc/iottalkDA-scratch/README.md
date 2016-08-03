@@ -80,7 +80,7 @@ Also. `get` has a threshold which is **200ms**. Within threshold, you will be gi
     <li>
         Create a project like below picture.
         <br>
-        <img src="/sunset1995/snp/raw/gh-pages/doc/iottalkDA-scratch/images/ex2-create-project.png" alt="" style="max-width:100%;">
+        <img src="images/ex2-create-project.png" alt="" style="max-width:100%;">
     </li>
     <li>
         The `getspeed` function in above picture  
@@ -95,11 +95,11 @@ Also. `get` has a threshold which is **200ms**. Within threshold, you will be gi
     <li>
         Implement Scratch
         <br>
-        <img src="/sunset1995/snp/raw/gh-pages/doc/iottalkDA-scratch/images/ex2-scratch.png" alt="" style="max-width:100%;">
+        <img src="images/ex2-scratch.png" alt="" style="max-width:100%;">
     </li>
     <li>
         Done. Below is the result after entering 15 in Scratch  
         <br>
-        <img src="/sunset1995/snp/raw/gh-pages/doc/iottalkDA-scratch/images/ex2-result.png" alt="" style="max-width:100%;">
+        <img src="images/ex2-result.png" alt="" style="max-width:100%;">
     </li>
 </ol>
