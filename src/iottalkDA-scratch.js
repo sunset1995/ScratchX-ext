@@ -94,23 +94,18 @@
     }
 
     function update(key, val, callback) {
-        console.log('?????????????')
-        console.log(cache);
-        console.log([key, val])
-        console.log(id)
-        console.log(cache['ScratchX_output'])
 
+        if( !cache )
+            cache = {};
+        if( !cache['ScratchX_output'] )
+            cache['ScratchX_output'] = {};
         cache['ScratchX_output'][key] = val;
-        
-        console.log(id)
-        console.log(cache['ScratchX_output'])
-        api.update(url, id, 'ScratchX_output', cache['ScratchX_output']);
 
-        /*if( !updateSet[id] ) {
+        if( !updateSet[id] ) {
             // Push to updateQueue
             updateQueue.push(id);
             updateSet[id] = true;
-        }*/
+        }
         callback();
     }
 
