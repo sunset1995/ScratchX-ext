@@ -75,6 +75,7 @@ Also. `get` has a threshold which is **200ms**. Within threshold, you will be gi
     ![](images/ex1-result.png)
 
 
+<br>
 ### Connect with Ball-Projectile
 <ol>
     <li>
@@ -101,3 +102,7 @@ Also. `get` has a threshold which is **200ms**. Within threshold, you will be gi
         <img src="images/ex2-result.png" alt="" style="max-width:100%;">
     </li>
 </ol>
+
+
+<br>
+### Control multiple IDF and ODF
