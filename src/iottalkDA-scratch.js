@@ -30,10 +30,10 @@
             delete updateSet[id];
             
             // Update remote server
-            if( cache && cache['ScratchX_output'] ) {
+            if( cache && cache['ScratchX_input'] ) {
                 console.log(id)
-                console.log(cache['ScratchX_output'])
-                api.update(url, id, 'ScratchX_output', [cache['ScratchX_output']]);
+                console.log(cache['ScratchX_input'])
+                api.update(url, id, 'ScratchX_input', [cache['ScratchX_input']]);
             }
         }
 
@@ -97,9 +97,9 @@
 
         if( !cache )
             cache = {};
-        if( !cache['ScratchX_output'] )
-            cache['ScratchX_output'] = {};
-        cache['ScratchX_output'][key] = val;
+        if( !cache['ScratchX_input'] )
+            cache['ScratchX_input'] = {};
+        cache['ScratchX_input'][key] = val;
 
         if( !updateSet[id] ) {
             // Push to updateQueue
