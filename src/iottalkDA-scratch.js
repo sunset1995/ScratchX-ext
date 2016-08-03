@@ -24,11 +24,11 @@
     var updateFlag = false;
     function checkQueue() {
         if( updateFlag ) {
-            updateFlag = false;
-            
             // Update remote server
-            if( cache && cache['ScratchX_input'] )
+            if( cache && cache['ScratchX_input'] ) {
+                updateFlag = false;
                 api.update(url, id, 'ScratchX_input', [cache['ScratchX_input']]);
+            }
         }
 
         setTimeout(checkQueue, updateThreshold);
@@ -65,7 +65,9 @@
                 'dm_name': 'ScratchX',
                 'is_sim': false,
                 'df_list': ['ScratchX_input', 'ScratchX_output'],
-            }
+            },
+            'ScratchX_input': {},
+            'ScratchX_output': 'nothing from server',
         };
 
         api.register(url, id, cache['profile'], callback);
@@ -76,29 +78,25 @@
             callback();
         else {
             url = '';
+            id = '';
+            cache = null;
             api.detach(url, id, callback);
         }
     }
 
     function update(key, val, callback) {
-
-        if( !cache )
-            cache = {};
-        if( !cache['ScratchX_input'] )
-            cache['ScratchX_input'] = {};
-        cache['ScratchX_input'][key] = val;
-
-        if( !updateSet[id] ) {
-            // Push to updateQueue
-            updateQueue.push(id);
-            updateSet[id] = true;
+        if( !cache || !cache['ScratchX_input'] )
+            callback('Please register first');
+        else {
+            cache['ScratchX_input'][key] = val;
+            updateFlag = true;
+            callback();
         }
-        callback();
     }
 
     function get(key, callback) {
         if( url === '' ) {
-            callback('server url not given');
+            callback('Please register first');
             return;
         }
 
@@ -112,15 +110,13 @@
             try {
                 api.get(url, id, 'ScratchX_output', function(ret) {
                     // Update local cache
-                    console.log(ret)
-                    console.log(typeof ret)
                     cache['ScratchX_output'] = ret[0];
 
                     __report(key, callback);
                 });
             }
             catch(e) {
-                callback('js bug, plase report to github');
+                callback('js bug, plase report issue');
             }
         }
     }
