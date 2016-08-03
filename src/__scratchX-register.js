@@ -18,7 +18,7 @@ module.exports = {
         ext[randomKey] = func;
         descriptor.blocks.push([opCode, label, randomKey]);
         var id = descriptor.blocks.length - 1;
-        for(let i=4; i<arguments.length; ++i)
+        for(let i=3; i<arguments.length; ++i)
             descriptor.blocks[id].push(arguments[i]);
     },
     ext: ext,
