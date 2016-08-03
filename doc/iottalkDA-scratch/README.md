@@ -84,13 +84,11 @@ Also. `get` has a threshold which is **200ms**. Within threshold, you will be gi
     </li>
     <li>
         The `getspeed` function in above picture  
-        <pre lang="python3"><code>
-        def run(*args):
-            if 'Speed' in args[0]:
-                return args[0]['Speed']
-            else:
-                return 0 
-        </code></pre>
+<pre lang="python3"><code>def run(*args):
+    if 'Speed' in args[0]:
+        return args[0]['Speed']
+    else:
+        return 0</code></pre>
     </li>
     <li>
         Implement Scratch
