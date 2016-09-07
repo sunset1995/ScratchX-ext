@@ -48,40 +48,51 @@
             else if( typeof cache['ScratchX_output'][key.toString()] !== 'undefined' )
                 callback(cache['ScratchX_output'][key.toString()]);
             else
-                callback(-1);
+                callback(0);
         }
         else
             callback(cache['ScratchX_output']);
     }
 
     // Implement ScratchX function
-    function setserver(mac_addr, ip, port, callback) {
-        url = 'http://' + ip + ':' + port;
-        id = mac_addr;
+    function setserver(ip, callback) {
+        if( url === '' && id === '' ) {
+            url = 'http://' + ip + ':9999';
+            api.getDeviceName(url, function(ret) {
+                id = ret;
 
-        cache = {
-            'profile': {
-                'd_name': id,
-                'dm_name': 'ScratchX',
-                'is_sim': false,
-                'df_list': ['ScratchX_input', 'ScratchX_output'],
-            },
-            'ScratchX_input': {},
-            'ScratchX_output': 'nothing from server',
-        };
+                cache = {
+                    'profile': {
+                        'd_name': id,
+                        'dm_name': 'ScratchX',
+                        'is_sim': false,
+                        'df_list': ['ScratchX_input', 'ScratchX_output'],
+                    },
+                    'ScratchX_input': {},
+                    'ScratchX_output': 'nothing from server',
+                };
 
-        api.register(url, id, cache['profile'], callback);
+                api.register(url, id, cache['profile'], callback);
+            });
+        }
+        else
+            callback();
+    }
+
+    function getname() {
+        return id;
     }
 
     function detach(callback) {
-        if( url === '' )
-            callback();
-        else {
+        if( url !== '' ) {
             url = '';
             id = '';
+            d_name = '';
             cache = null;
             api.detach(url, id, callback);
         }
+        else if( typeof callback === 'function' )
+            callback();
     }
 
     function updateStr(key, val, callback) {
@@ -97,7 +108,7 @@
     }
 
     function updateNum(key, val, callback) {
-        val = Number(val) || -1;
+        val = Number(val) || 0;
 
         if( !cache || !cache['ScratchX_input'] )
             callback('Please register first');
@@ -139,8 +150,8 @@
 
 
     // Scratch extentions
-    SXregister.add(setserver, 'w', 'register %s to IoTtalk server %s %s', 'mac_addr', 'ip', 'port');
-    SXregister.add(detach, 'w', 'detach device');
+    SXregister.add(setserver, 'w', 'set IoTtalk server url %s', 'ip');
+    SXregister.add(getname, 'r', 'my device name');
     SXregister.add(updateStr, 'w', 'update %s = %s', 'key', 'val');
     SXregister.add(updateNum, 'w', 'update %s = %d', 'key', '0');
     SXregister.add(get, 'R', 'get %s', 'key');
@@ -148,7 +159,7 @@
 
 
     ScratchExtensions.register(
-        'Chatroom extension',
+        'IoTtalk extension',
         SXregister.descriptor,
         SXregister.ext);
     
@@ -156,7 +167,6 @@
 
 
     // Detach when close
-    SXregister.ext._shutdown = detach;
     window.onunload = detach;
     window.onbeforeunload = detach;
     window.onclose = detach;

@@ -70,7 +70,7 @@ function update(url, mac, feature, data, callback) {
 
 
 function get(url, mac, feature, callback) {
-    var ret = -1;
+    var ret = 0;
     $.ajax({
         type: "GET",
         cache: false,
@@ -100,6 +100,39 @@ function get(url, mac, feature, callback) {
     });   
 }
 
+function getDeviceName(url, callback) {
+    console.log(url + '/tree')
+    var ret = '';
+    $.ajax({
+        method: 'GET',
+        cache: false,
+        url: url + '/tree',
+        success: function(res) {
+            try {
+                res = JSON.parse(res);
+            }
+            catch(e) {
+                return;
+            }
+            var idx = 0;
+            while( ++idx<10000 && res['SX_'+idx] )
+                ;
+            ret = 'SX_'+idx;
+            console.log(ret);
+        },
+        error: function(err, st) {
+            console.log(err);
+            console.log(st);
+            console.log('Get device name failed');
+        },
+        complete: function() {
+            if( typeof callback === 'function' )
+                callback(ret);
+        },
+        dataType: 'text',
+    });
+}
+
 
 
 
@@ -110,6 +143,7 @@ if( window ) {
         detach: detach,
         update: update,
         get: get,
+        getDeviceName: getDeviceName,
     };
 }
 
@@ -119,4 +153,5 @@ module.exports = {
     detach: detach,
     update: update,
     get: get,
+    getDeviceName: getDeviceName,
 }
