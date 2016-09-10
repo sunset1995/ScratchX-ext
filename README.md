@@ -1,6 +1,7 @@
 # ScratchX extension experiment
 
-Search ScratchX extension for course snp in NCTU.
+ScratchX extensions for course and lab.  
+This branch contains websocket server that serving scratchX websocket extension and web gsensor.  
 
 
 ## Before start
