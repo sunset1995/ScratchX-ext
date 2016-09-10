@@ -7,7 +7,7 @@ If you look for websocket server side, go to [master branch](https://github.com/
 
 ## Extensions
 - [DA](extensions/iottalkDA-scratch.js) (not stable yet)
-- [chatroom](extensions/chatroom.js)
+- [ws](extensions/chatroom.js)
 
 
 ## Other components
