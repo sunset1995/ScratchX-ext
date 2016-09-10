@@ -11,17 +11,31 @@ var toBeUpdated = {};
 
 
 // Can be called once and only once
-function initServer(name, url) {
-    if( io || !url )
+function initServer(name, url, callback) {
+    if( io || !url ) {
+        callback();
+        callback = null;
         return;
+    }
     io = socketio(url);
     window.io = io;
     console.log('Connecting to', url);
 
     // Binding socket
+    io.on('connect_error', function() {
+        if( typeof callback === 'function' ) {
+            callback();
+            callback = null;
+        }
+    });
+
     io.on('connect', function() {
         console.log('Connected success');
         io.emit('set name', name);
+        if( typeof callback === 'function' ) {
+            callback();
+            callback = null;
+        }
     });
 
     io.on('subscribe success', function(ret) {
