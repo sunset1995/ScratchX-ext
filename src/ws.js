@@ -13,7 +13,7 @@
         api.initServer(name, url, callback);
     }
 
-    function update(feature, val, callback) {
+    function update(feature, val) {
         api.update(feature, val);
     }
 
