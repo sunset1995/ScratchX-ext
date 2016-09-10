@@ -54,7 +54,6 @@ function initServer(name, url, callback) {
     });
 
     io.on('publisher updated', function(ret) {
-        console.log('publisher update', ret);
         var who = ret[0];
         var features = ret[1];
         localCache[who] = features;
