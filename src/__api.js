@@ -23,6 +23,9 @@ function initServer(name, url, callback) {
 
     // Binding socket
     io.on('connect_error', function() {
+        console.log('connect error');
+        io.close();
+        io = null;
         if( typeof callback === 'function' ) {
             callback();
             callback = null;
@@ -30,12 +33,17 @@ function initServer(name, url, callback) {
     });
 
     io.on('connect', function() {
-        console.log('Connected success');
+        console.log('Connection success');
         io.emit('set name', name);
         if( typeof callback === 'function' ) {
             callback();
             callback = null;
         }
+    });
+
+    io.on('disconnect', function() {
+        io.close();
+        io = null;
     });
 
     io.on('subscribe success', function(ret) {
@@ -80,6 +88,9 @@ function initServer(name, url, callback) {
 // Export api
 module.exports = {
     initServer: initServer,
+    connectSuccess: function() {
+        return io !== null? 1 : 0;
+    },
     update: function(key, val) {
         if( !io || !key )
             return;
