@@ -2,11 +2,11 @@
 
 Develop ScratchX extensions for courses and lab @NCTU.  
 This branch contains ScratchX extension javascript files and some examples ScratchX project.
-If you look for websocket server to serve ScratchX extension, go to [master branch](https://github.com/sunset1995/ScratchX-ext).  
+If you look for websocket server side, go to [master branch](https://github.com/sunset1995/ScratchX-ext).  
 
 
 ## Extensions
-- [DA](extensions/iottalkDA-scratch.js) (non stable)
+- [DA](extensions/iottalkDA-scratch.js) (not stable yet)
 - [chatroom](extensions/chatroom.js)
 
 
