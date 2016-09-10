@@ -1,4 +1,4 @@
-const DEBUG = false;
+const C9 = false;
 const PORT = process.env.PORT || 4444;
 var io = require('socket.io')(PORT);
 
@@ -61,15 +61,16 @@ io.on('connection', function(socket){
 // Debugger
 function analysisInfo() {
     console.log('\u001B[2J\u001B[0;0f');
+    if( C9 )
+        console.log('ws://' + process.env.C9_HOSTNAME);
     
     const keys = Object.keys(publisher);
     for(var i=0; i<keys.length; ++i) {
         var members = io.nsps['/'].adapter.rooms[keys[i]] || {};
         console.log('============================================');
-        console.log('publisher : ' + keys[i]);
-        console.log('subscriber : ' + (members.length || 0));
+        console.log('publisher:', keys[i]);
+        console.log('subscriber:', (members.length || 0));
         console.log(JSON.stringify(publisher[keys[i]], null, '\t'));
     }
 }
-if( DEBUG )
-    setInterval(analysisInfo, 1000);
+setInterval(analysisInfo, 1000);
