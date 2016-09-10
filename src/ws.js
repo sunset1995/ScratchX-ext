@@ -35,7 +35,7 @@
 
 
     ScratchExtensions.register(
-        'Chatroom extension',
+        'Websocket extension',
         SXregister.descriptor,
         SXregister.ext);
 
