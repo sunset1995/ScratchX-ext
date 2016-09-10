@@ -1,4 +1,4 @@
-const C9 = false;
+const C9 = process.env.C9_HOSTNAME !== '';
 const PORT = process.env.PORT || 4444;
 var io = require('socket.io')(PORT);
 
