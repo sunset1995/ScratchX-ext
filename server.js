@@ -1,12 +1,6 @@
 const DEBUG = false;
 const PORT = process.env.PORT || 4444;
-
-
-
-var app = require('http').createServer(handler)
-var io = require('socket.io')(app);
-
-app.listen(PORT);
+var io = require('socket.io')(PORT);
 
 
 
