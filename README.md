@@ -10,6 +10,10 @@ If you look for websocket server side, go to [master branch](https://github.com/
 - [chatroom](extensions/chatroom.js)
 
 
+## Other components
+- [gsensor](static/gsensor.html)
+
+
 ## Build
 
 ### Prerequirement
