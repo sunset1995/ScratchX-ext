@@ -1,7 +1,4 @@
 var ext = {
-    _shutdown: function() {
-        confirm('_shutdown');
-    },
     _getStatus: function() {
         return {status: 2, msg: 'Ready'};
     },
