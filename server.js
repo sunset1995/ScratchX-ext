@@ -1,20 +1,12 @@
+const DEBUG = false;
 const PORT = process.env.PORT || 4444;
-const IP = process.env.IP || '0.0.0.0';
-
-
-console.log('Running server now...');
-
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
 
 
 
+var app = require('http').createServer(handler)
+var io = require('socket.io')(app);
 
-// Set http static files serveer
-app.use(express.static(__dirname + '/static'));
-
+app.listen(PORT);
 
 
 
@@ -72,7 +64,6 @@ io.on('connection', function(socket){
 
 
 
-
 // Debugger
 function analysisInfo() {
     console.log('\u001B[2J\u001B[0;0f');
@@ -86,11 +77,5 @@ function analysisInfo() {
         console.log(JSON.stringify(publisher[keys[i]], null, '\t'));
     }
 }
-setInterval(analysisInfo, 1000);
-
-
-
-
-http.listen(PORT, IP, function(){
-    console.log('listening on ' + IP + ':' + PORT);
-});
+if( DEBUG )
+    setInterval(analysisInfo, 1000);
