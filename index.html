@@ -14,7 +14,7 @@
         var md = new Remarkable();
         var main = document.querySelector('main');
 
-        request('GET', '//scratchx.nctu.me/README.md').done(function(res) {
+        request('GET', 'README.md').done(function(res) {
             main.innerHTML = md.render(res.getBody());
         });
     </script>
