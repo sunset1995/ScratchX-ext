@@ -2,9 +2,6 @@
 var socketio = require('socket.io-client')
 var io = null;
 
-// Export to global for debug
-window.io = io;
-
 
 
 
@@ -14,19 +11,28 @@ var toBeUpdated = {};
 
 
 // Can be called once and only once
-function initServer(url) {
+function initServer(name, url) {
     if( io || !url )
         return;
     io = socketio(url);
+    window.io = io;
+    console.log('Connecting to', url);
 
     // Binding socket
+    io.on('connect', function() {
+        console.log('Connected success');
+        io.emit('set name', name);
+    });
+
     io.on('subscribe success', function(ret) {
+        console.log('subscribe success', ret);
         var who = ret[0];
         var features = ret[1];
         localCache[who] = features;
     });
 
     io.on('publisher updated', function(ret) {
+        console.log('publisher update', ret);
         var who = ret[0];
         var features = ret[1];
         localCache[who] = features;
@@ -60,11 +66,6 @@ function initServer(url) {
 // Export api
 module.exports = {
     initServer: initServer,
-    setName: function(name) {
-        if( !io || typeof name !== 'string' )
-            return;
-        io.emit('set name', name);
-    },
     update: function(key, val) {
         if( !io || !key )
             return;

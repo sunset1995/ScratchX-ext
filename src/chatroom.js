@@ -9,13 +9,8 @@
 
 
     // Implement scratchX extenion
-    function initServer(url, callback) {
-        api.initServer(url);
-        callback();
-    }
-
-    function setName(name, callback) {
-        api.setName(name);
+    function initServer(name, url, callback) {
+        api.initServer(name, url);
         callback();
     }
 
@@ -32,10 +27,9 @@
 
 
     // Scratch extentions
-    SXregister.add(initServer, 'w', 'init server %s', 'server url');
-    SXregister.add(setName, 'w', 'set my name as %s', 'scratchX');
-    SXregister.add(update, 'w', 'update %s %s', 'feature', 'val');
-    SXregister.add(get, 'r', 'get %s %s', 'who', 'feature');
+    SXregister.add(initServer, 'w', '我叫 %s 連接至伺服器 %s', '某人', 'url');
+    SXregister.add(update, 'w', '令 %s = %s', '屬性', '值');
+    SXregister.add(get, 'r', '取得 %s %s 的值', '某人', '屬性');
 
 
 
