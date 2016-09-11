@@ -12,10 +12,17 @@ var toBeUpdated = {};
 
 // Can be called once and only once
 function initServer(name, url, callback) {
-    if( io || !url ) {
+    if( !url ) {
         callback();
         callback = null;
         return;
+    }
+    if( io ) {
+        try {
+            io.close();
+            console.log('Closed exiting socket');
+        }
+        catch(e) {}
     }
     io = socketio(url);
     window.io = io;
