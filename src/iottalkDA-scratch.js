@@ -40,7 +40,7 @@
 
     // Self used function
     function __report(key, callback) {
-        if( !cache || !cache['ScratchX_output'] )
+        if( !cache || !('ScratchX_output' in cache) )
             callback('not exist');
         else if( typeof cache['ScratchX_output'] === 'object' ) {
             if( typeof cache['ScratchX_output'][parseInt(key, 10)] !== 'undefined' )
