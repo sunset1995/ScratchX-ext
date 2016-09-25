@@ -85,11 +85,11 @@
 
     function detach(callback) {
         if( url !== '' ) {
+            api.detach(url, id, callback);
             url = '';
             id = '';
             d_name = '';
             cache = null;
-            api.detach(url, id, callback);
         }
         else if( typeof callback === 'function' )
             callback();
