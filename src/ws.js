@@ -21,6 +21,10 @@
         api.update(feature, val);
     }
 
+    function subscribe(who) {
+        api.subscribe(who);
+    }
+
     function get(who, feature) {
         return api.get(who, feature);
     }
@@ -32,6 +36,7 @@
     SXregister.add(initServer, 'w', '我叫 %s 連接至伺服器 %s', '某人', 'url');
     SXregister.add(connectSuccess, 'r', '成功連線');
     SXregister.add(update, ' ', '令 %s = %s', '屬性', '值');
+    SXregister.add(subscribe, ' ', '訂閱 %s 的所有資訊', '某人');
     SXregister.add(get, 'r', '取得 %s %s 的值', '某人', '屬性');
 
 

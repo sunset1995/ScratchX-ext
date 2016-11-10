@@ -102,6 +102,9 @@ module.exports = {
             return;
         toBeUpdated[key] = val;
     },
+    subscribe: function(who) {
+        io.emit('subscribe', who);
+    },
     get: function(who, feature) {
         if( !io )
             return '';
