@@ -72,5 +72,12 @@ function analysisInfo() {
         console.log('subscriber:', (members.length || 0));
         console.log(JSON.stringify(publisher[keys[i]], null, '\t'));
     }
+
+    console.log('press Enter to refresh...');
 }
-setInterval(analysisInfo, 1000);
+setTimeout(analysisInfo, 1000);
+
+process.stdin.on('readable', () => {
+    var chunk = process.stdin.read();
+    analysisInfo();
+});
