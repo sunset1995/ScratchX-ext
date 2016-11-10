@@ -105,8 +105,11 @@ module.exports = {
     get: function(who, feature) {
         if( !io )
             return '';
-        else if( localCache[who] )
-            return localCache[who][feature] || '';
+        else if( localCache[who] ) {
+            if( typeof localCache[who][feature] !== 'undefined' )
+                return localCache[who][feature];
+            else return '';
+        }
         else {
             localCache[who] = {};
             io.emit('subscribe', who);
