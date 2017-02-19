@@ -23,9 +23,8 @@
         console.info('[cmd]', cmd, param);
         return true;
     }
-
     function on_data(idf_name, data) {
-        console.info('[data]', idf_name, data);
+        odf = data
     }
 
     // Implement ScratchX function
