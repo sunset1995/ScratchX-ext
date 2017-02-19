@@ -175,12 +175,14 @@ function register (url, params, callback) {
                 'retain': true,
             },
         });
-        window._mqtt_client = _mqtt_client;
         _mqtt_client.on('connect', on_connect);
         _mqtt_client.on('reconnect', function() { console.info('reconnect') });
         _mqtt_client.on('error', function(err) { console.info('error', err) });
         _mqtt_client.on('message', function(topic, message, packet) {
-            console.log('onMessage', topic, message, packet)
+            on_message({
+                'destinationName': topic,
+                'payloadString': message.toString()
+            });
         });
     }).fail(function(err) {
         console.error('fail', err)
