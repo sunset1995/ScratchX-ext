@@ -52,6 +52,10 @@
         }, init_callback);
     }
 
+    function isConnected(callback) {
+        callback(dan2.connected());
+    }
+
     function updateStr(key, val, callback) {
         idf[key] = val.toString();
         dan2.push('ScratchX_input', [idf]);
@@ -83,6 +87,7 @@
 
     // Scratch extentions
     SXregister.add(setserver, 'w', '我叫 %s 註冊至 %s', 'name', 'ip');
+    SXregister.add(isConnected, 'R', '已連線');
     SXregister.add(updateStr, 'w', 'update %s = %s', 'key', 'val');
     SXregister.add(updateNum, 'w', 'update %s = %d', 'key', '0');
     SXregister.add(get, 'R', 'get %s', 'key');

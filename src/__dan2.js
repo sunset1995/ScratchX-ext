@@ -1,14 +1,14 @@
-var mqtt = require('mqtt')
-var _url;
-var _id;
-var _mqtt_host;
-var _mqtt_port;
-var _mqtt_client;
-var _i_chans;
-var _o_chans;
-var _on_signal;
-var _on_data;
-var _rev;
+const mqtt = require('mqtt')
+let _url;
+let _id;
+let _mqtt_host;
+let _mqtt_port;
+let _mqtt_client;
+let _i_chans;
+let _o_chans;
+let _on_signal;
+let _on_data;
+let _rev;
 
 function ChannelPool () {
     this._table = {};
@@ -200,6 +200,9 @@ function push (idf_name, data) {
 module.exports = {
     'register': register,
     'push': push,
+    'connected': function() {
+        return (_mqtt_client && _mqtt_client.connected) ? 1 : 0;
+    },
     'UUID': function() {
         return _id;
     },
