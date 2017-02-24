@@ -31,7 +31,7 @@
     function setserver(name, ip, callback) {
         var url = 'http://' + ip + ':9992';
         var init_callback = function(result) {
-            console.log('register:', result);
+            console.info('register:', result);
             callback();
         }
 

@@ -9,6 +9,7 @@ let _o_chans;
 let _on_signal;
 let _on_data;
 let _rev;
+let _detaching = false;
 
 function ChannelPool () {
     this._table = {};
@@ -29,11 +30,11 @@ function ChannelPool () {
     };
 }
 
-function publish (channel, message, retained) {
+function publish (channel, message, retained, callback) {
     if (!_mqtt_client) {
         return;
     }
-    _mqtt_client.publish(channel, message, { 'retain': retained })
+    _mqtt_client.publish(channel, message, { 'retain': retained }, callback)
 }
 
 function subscribe (channel) {
@@ -112,7 +113,35 @@ function UUID () {
         s4() + '-' + s4() + s4() + s4();
 }
 
+function detach(id, rev, callback) {
+    _detaching = true;
+    publish(
+        _i_chans.topic('ctrl'),
+        JSON.stringify({'state': 'broken', 'rev': _rev}),
+        true,
+        () => {
+            _mqtt_client.end(false, ()=>{
+                _mqtt_client = null;
+                _detaching = false;
+                callback();  
+            });
+        }
+    );
+}
+
 function register (url, params, callback) {
+    if( _detaching ) {
+        callback();
+        return;
+    }
+
+    if( _mqtt_client ) {
+        detach(_id.toString(), _rev.toString(), ()=>{
+            register(url, params, callback);
+        });
+        return;
+    }
+
     _url = url;
     _id = ('id' in params) ? params['id'] : UUID();
     _mqtt_host = ('mqtt_host' in params) ? params['mqtt_host'] : location.hostname;
@@ -150,8 +179,7 @@ function register (url, params, callback) {
         _rev = metadata['rev'];
 
         function on_connect () {
-            console.log('on_connect')
-            console.log(callback)
+            console.info('on_connect')
             publish(
                 _i_chans.topic('ctrl'),
                 JSON.stringify({'state': 'online', 'rev': _rev}),
@@ -176,6 +204,7 @@ function register (url, params, callback) {
             },
         });
         _mqtt_client.on('connect', on_connect);
+        _mqtt_client.on('close', function() { console.info('close') });
         _mqtt_client.on('reconnect', function() { console.info('reconnect') });
         _mqtt_client.on('error', function(err) { console.info('error', err) });
         _mqtt_client.on('message', function(topic, message, packet) {
