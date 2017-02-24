@@ -17,7 +17,7 @@
 
     // Self used function
     function detach(callback) {
-        console.log('TODO: detach');
+        console.info('TODO: detach');
     }
     function on_signal(cmd, param) {
         console.info('[cmd]', cmd, param);
@@ -58,13 +58,13 @@
 
     function updateStr(key, val, callback) {
         idf[key] = val.toString();
-        dan2.push('ScratchX_input', [idf]);
+        dan2.push('ScratchX_input', idf);
         callback();
     }
 
     function updateNum(key, val, callback) {
         idf[key] = Number(val) || 0;
-        dan2.push('ScratchX_input', [idf]);
+        dan2.push('ScratchX_input', idf);
         callback();
     }
 
